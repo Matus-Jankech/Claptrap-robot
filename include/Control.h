@@ -30,3 +30,5 @@ void read_encoder_2(void);
 void LEDs_init(void);
 void MP3_init(void);
 bool is_radio_connected(void);
+void get_velocity(double* velocity_1, double* velocity_2);
+void set_motor_velocity(bool dir, int pwmVal, int pin1, int pin2);
