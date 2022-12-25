@@ -23,12 +23,13 @@
 #define MPU_SCL_PIN A5 // blue 19
 
 /* Function headers*/
-void pins_init(void);
 void radio_init(void);
-void read_encoder_1(void);
-void read_encoder_2(void);
 void LEDs_init(void);
 void MP3_init(void);
+void encoders_init(void);
+void motors_init(void);
+void read_encoder_1(void);
+void read_encoder_2(void);
 bool is_radio_connected(void);
 void get_velocity(double* velocity_1, double* velocity_2);
 void set_motor_velocity(bool dir, int pwmVal, int pin1, int pin2);

@@ -9,9 +9,20 @@ double vel_filtered_1[2];
 double vel_filtered_2[2];
 
 /* Functions */
+void encoders_init(){
+    /* Set pinmodes */
+    pinMode(Encoder_A1_PIN,INPUT); 
+    pinMode(Encoder_B1_PIN,INPUT);
+    pinMode(Encoder_A2_PIN,INPUT);
+    pinMode(Encoder_B2_PIN,INPUT);
+
+    /* Attach hardware interrupts */
+    attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
+    attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
+}
+
 void read_encoder_1(){
     int b = digitalRead(Encoder_A1_PIN);
-
     if(b > 0){
         current_encoder_pos[0] = current_encoder_pos[0] + 1;
     }
@@ -22,7 +33,6 @@ void read_encoder_1(){
 
 void read_encoder_2(){
     int b = digitalRead(Encoder_A2_PIN);
-
     if(b > 0){
         current_encoder_pos[1] = current_encoder_pos[1] + 1;
     }
