@@ -7,5 +7,6 @@ void MP3_init(){
     Serial1.begin(9600);
     delay(10);
     mp3.begin(Serial1);
-    mp3.volume(20);
+    mp3.volume(10);
+    mp3.play(2);
 }
