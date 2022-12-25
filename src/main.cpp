@@ -25,8 +25,4 @@ void loop() {
     Serial.print(vel1);
     Serial.println(" ");
     delay(10);
-    /*Serial.print(vel1);
-    Serial.print(" ");
-    //Serial.print(100);
-    Serial.println(" ");*/
 }

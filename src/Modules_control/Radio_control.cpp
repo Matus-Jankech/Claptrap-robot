@@ -38,6 +38,5 @@ bool is_radio_connected(){
     else if (millis() - radio_last_receive_time > 100) { 
         radio_status = false; 
     } 
-
     return radio_status;
 }
