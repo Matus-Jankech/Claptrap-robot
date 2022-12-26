@@ -19,21 +19,15 @@ void loop() {
         if(radio_data.j1PotX == 0){
             ref_vel[0] = 100;
             ref_vel[1] = 0;
-            set_motor_pwm(100,M1_front_PIN,M1_back_PIN);
-            set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
         }
         else{
             ref_vel[0] = -100;
             ref_vel[1] = 0; 
-            set_motor_pwm(-100,M1_front_PIN,M1_back_PIN);
-            set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
         }
     }
     else{
         ref_vel[0] = 0;
         ref_vel[1] = 0;
-        set_motor_pwm(0,M1_front_PIN,M1_back_PIN);
-        set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
     }
 
     calculate_velocity_PID(ref_vel);
