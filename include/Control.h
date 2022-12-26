@@ -22,6 +22,14 @@
 #define MPU_SDA_PIN A4 // white 18
 #define MPU_SCL_PIN A5 // blue 19
 
+/* Structures */
+typedef struct RADIO_DATA_STRUCT {
+    byte j1PotX;
+    byte j1PotY;
+    byte j2PotX;
+    byte j2PotY;
+} radio_data_struct;
+
 /* Function headers*/
 void radio_init(void);
 void LEDs_init(void);
@@ -31,5 +39,7 @@ void motors_init(void);
 void read_encoder_1(void);
 void read_encoder_2(void);
 bool is_radio_connected(void);
-void set_motor_velocity(bool dir, int pwmVal, int pin1, int pin2);
+void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
+void calculate_velocity_PID(double ref_vel[2]);
 void get_velocity(double** velocity);
+radio_data_struct read_radio(void);

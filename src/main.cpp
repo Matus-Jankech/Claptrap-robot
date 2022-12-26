@@ -1,6 +1,6 @@
 #include <Control.h>
 
-double* vel;
+radio_data_struct radio_data;
 
 void setup() {
     Serial.begin(115200);
@@ -12,17 +12,30 @@ void setup() {
 }
 
 void loop() {
+    double ref_vel[2];
+
     if(is_radio_connected()){
-        set_motor_velocity(true,100,M1_front_PIN,M1_back_PIN);
-        set_motor_velocity(true,0,M2_front_PIN,M2_back_PIN);
+        radio_data = read_radio();
+        if(radio_data.j1PotX == 0){
+            ref_vel[0] = 100;
+            ref_vel[1] = 0;
+            set_motor_pwm(100,M1_front_PIN,M1_back_PIN);
+            set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
+        }
+        else{
+            ref_vel[0] = -100;
+            ref_vel[1] = 0; 
+            set_motor_pwm(-100,M1_front_PIN,M1_back_PIN);
+            set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
+        }
     }
     else{
-        set_motor_velocity(true,0,M1_front_PIN,M1_back_PIN);
-        set_motor_velocity(true,0,M2_front_PIN,M2_back_PIN);
+        ref_vel[0] = 0;
+        ref_vel[1] = 0;
+        set_motor_pwm(0,M1_front_PIN,M1_back_PIN);
+        set_motor_pwm(0,M2_front_PIN,M2_back_PIN);
     }
 
-    get_velocity(&vel);
-    Serial.print(vel[0]);
-    Serial.println(" ");
+    calculate_velocity_PID(ref_vel);
     delay(10);
 }
