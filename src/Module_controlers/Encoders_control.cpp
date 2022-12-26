@@ -41,7 +41,7 @@ void read_encoder_2(){
     }
 }
 
-void filter_velocity(double* velocity_1,double* velocity_2){
+/*void filter_velocity(double* velocity_1,double* velocity_2){
     vel_filtered_1[0] = 0.854*vel_filtered_1[0] + 0.0728*(*velocity_1) + 0.0728*vel_filtered_1[1];
     vel_filtered_1[1] = *velocity_1;
     vel_filtered_2[0] = 0.854*vel_filtered_2[0] + 0.0728*(*velocity_2) + 0.0728*vel_filtered_2[1];
@@ -59,6 +59,30 @@ void get_velocity(double* velocity_1, double* velocity_2){
     *velocity_2 = (current_encoder_pos[1] - last_encoder_pos[1])/delta_time;
     *velocity_2 = *velocity_2/1020*60; // RPM
     filter_velocity(velocity_1,velocity_2);
+
+    encoders_last_read_time = micros();
+    last_encoder_pos[0] = current_encoder_pos[0];
+    last_encoder_pos[1] = current_encoder_pos[1];
+}*/
+
+void filter_velocity(double** velocity){
+    vel_filtered_1[0] = 0.854*vel_filtered_1[0] + 0.0728*((*velocity)[0]) + 0.0728*vel_filtered_1[1];
+    vel_filtered_1[1] = (*velocity)[0];
+    vel_filtered_2[0] = 0.854*vel_filtered_2[0] + 0.0728*((*velocity)[1]) + 0.0728*vel_filtered_2[1];
+    vel_filtered_2[1] = (*velocity)[1];
+
+    (*velocity)[0] = vel_filtered_1[0];
+    (*velocity)[1] = vel_filtered_2[0];
+}
+
+void get_velocity(double** velocity){
+    double delta_time = ((double)(micros() - encoders_last_read_time)/1.0e6);
+    
+    (*velocity)[0] = (current_encoder_pos[0] - last_encoder_pos[0])/delta_time;
+    (*velocity)[0] = (*velocity)[0]/1020*60; // RPM
+    (*velocity)[1] = (current_encoder_pos[1] - last_encoder_pos[1])/delta_time;
+    (*velocity)[1] = (*velocity)[1]/1020*60; // RPM
+    filter_velocity(velocity);
 
     encoders_last_read_time = micros();
     last_encoder_pos[0] = current_encoder_pos[0];

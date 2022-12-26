@@ -31,5 +31,5 @@ void motors_init(void);
 void read_encoder_1(void);
 void read_encoder_2(void);
 bool is_radio_connected(void);
-void get_velocity(double* velocity_1, double* velocity_2);
 void set_motor_velocity(bool dir, int pwmVal, int pin1, int pin2);
+void get_velocity(double** velocity);
