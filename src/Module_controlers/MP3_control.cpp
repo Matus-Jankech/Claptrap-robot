@@ -15,7 +15,6 @@ void MP3_set_volume(int volume){
 
 void MP3_init(){
     Serial1.begin(9600);
-    delay(10);
     mp3.begin(Serial1);
     MP3_set_volume(10);
     MP3_play(2);

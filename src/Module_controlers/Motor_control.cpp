@@ -35,17 +35,16 @@ void set_motor_pwm(int pwm_value, int pin_1, int pin_2){
     }
 }
 
-void calculate_velocity_PID(double ref_vel[2]){
+void calculate_velocity_PID(double* ref_vel){
     const double Kp[2] = {0.7,0.7};
     const double Ki[2] = {4,4};
     double delta_time;
     double current_vel[2];
-    double* current_vel_ptr = current_vel;
     double error[2];
     int16_t pwm[2];
     
     /* Get current velocity on each motor */
-    get_velocity(&current_vel_ptr);
+    get_velocity(current_vel);
 
     error[0] = ref_vel[0] - current_vel[0]; 
     error[1] = ref_vel[1] - current_vel[1];

@@ -40,6 +40,6 @@ void read_encoder_1(void);
 void read_encoder_2(void);
 bool is_radio_connected(void);
 void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
-void calculate_velocity_PID(double ref_vel[2]);
-void get_velocity(double** velocity);
+void calculate_velocity_PID(double* ref_vel);
+void get_velocity(double* velocity);
 radio_data_struct read_radio(void);
