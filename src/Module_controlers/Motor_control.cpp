@@ -1,12 +1,12 @@
 /* Includes */
 #include <Control.h>
 
-/* Global varialbes */
+/* Global variables */
 double P_gain[2], I_gain[2];
 unsigned long PID_last_calc_time;
 
-/* Functions */
-void motors_init(){
+/* Methods definition */
+void Claptrap::motors_init(){
     /* Set pinmodes */
     pinMode(M1_front_PIN,OUTPUT);
     pinMode(M1_back_PIN,OUTPUT); 
@@ -20,7 +20,7 @@ void motors_init(){
     analogWrite(M2_back_PIN,0); 
 }
 
-void set_motor_pwm(int pwm_value, int pin_1, int pin_2){
+void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
     if(pwm_value > 35){
         analogWrite(pin_2,0);
         analogWrite(pin_1,pwm_value);
@@ -35,7 +35,7 @@ void set_motor_pwm(int pwm_value, int pin_1, int pin_2){
     }
 }
 
-void calculate_velocity_PID(double* ref_vel){
+void Claptrap::calculate_velocity_PID(double* ref_vel){
     const double Kp[2] = {0.7,0.7};
     const double Ki[2] = {4,4};
     double delta_time;
@@ -87,12 +87,12 @@ void calculate_velocity_PID(double* ref_vel){
 
     PID_last_calc_time = micros();
     
-    Serial.print(ref_vel[0]);
+    /*Serial.print(ref_vel[0]);
     Serial.print(" , ");
     Serial.print(current_vel[0]);
     Serial.print(" , ");
     Serial.print(0);
     Serial.print(" , ");
     Serial.print(pwm[0]);
-    Serial.println(" ");
+    Serial.println(" ");*/
 }

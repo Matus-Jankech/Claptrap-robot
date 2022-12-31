@@ -1,18 +1,19 @@
 /* Inludes */
 #include <Control.h>
-#include <Adafruit_NeoPixel.h>
 
 /* Global variables */
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(4, Leds_PIN, NEO_GRBW + NEO_KHZ800);
+Adafruit_NeoPixel pixels;
 
-/* Functions */
-void set_eye_color(int r, int g, int b){
-    for(int i = 1; i < 4; i++){
+/* Methods definition */
+void Claptrap::set_eye_color(uint8_t r, uint8_t g, uint8_t b){
+    for(int i = 0; i < 4; i++){
        pixels.setPixelColor(i, pixels.Color(r,g,b));  
     }
+    pixels.show();
 }
 
-void LEDs_init(void){
+void Claptrap::LEDs_init(){
+    pixels = Adafruit_NeoPixel(4, Leds_PIN, NEO_GRBW + NEO_KHZ800);
     pixels.begin(); 
     set_eye_color(0,0,255);
     pixels.setBrightness(255);
