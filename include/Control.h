@@ -40,13 +40,16 @@ class Claptrap {
         Claptrap();
 
         /* Methods */
-        radio_data_struct read_radio(void);
+        void begin();
+        void read_radio(void);
         bool is_radio_connected(void);
         void set_eye_color(uint8_t r, uint8_t g, uint8_t b);
         void MP3_play(int track_num);
         void MP3_set_volume(int volume);
-        void begin();
-        void calculate_velocity_PID(double* ref_vel); // Later move to private methods       
+        void calculate_velocity_PID(double* ref_vel); // Later move to private methods   
+
+        /* Variables */
+        radio_data_struct radio_data;
 
     private:
         /* Methods */
@@ -59,7 +62,6 @@ class Claptrap {
         void filter_velocity(double* velocity);
         void get_velocity(double* velocity);
 };
-
 
 /* Function headers*/
 void read_encoder_1(void);

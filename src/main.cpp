@@ -1,7 +1,6 @@
 #include <Control.h>
 
 /* Global variables */
-radio_data_struct radio_data;
 Claptrap claptrap;
 bool LED_switch = true;
 
@@ -14,8 +13,8 @@ void loop() {
     double ref_vel[2];
 
     if(claptrap.is_radio_connected()){
-        radio_data = claptrap.read_radio();
-        if(radio_data.j1PotX == 0){
+        claptrap.read_radio();
+        if(claptrap.radio_data.j1PotX == 0){
             ref_vel[0] = 100;
             ref_vel[1] = 0;
             if(LED_switch){

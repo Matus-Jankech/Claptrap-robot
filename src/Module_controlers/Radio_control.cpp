@@ -3,7 +3,6 @@
 
 /* Global variables */
 uint64_t pipe = 0xE8E8F0F0E1LL;
-radio_data_struct radio_control_data;
 RF24 radio(CE_PIN,CSN_PIN);
 bool radio_status = 0;
 unsigned long radio_last_receive_time;
@@ -30,7 +29,6 @@ bool Claptrap::is_radio_connected(){
     return radio_status;
 }
 
-radio_data_struct Claptrap::read_radio(){
-    radio.read(&radio_control_data, sizeof(radio_data_struct));
-    return radio_control_data;
+void Claptrap::read_radio(){
+    radio.read(&radio_data, sizeof(radio_data_struct));
 }
