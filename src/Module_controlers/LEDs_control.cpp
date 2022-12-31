@@ -1,5 +1,5 @@
 /* Inludes */
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Global variables */
 Adafruit_NeoPixel pixels;

@@ -1,5 +1,5 @@
 /* Includes */
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Global variables */
 volatile long current_encoder_pos[2];
@@ -26,7 +26,7 @@ void Claptrap::filter_velocity(double* velocity){
     vel_filtered_1[1] = velocity[0];
     vel_filtered_2[0] = 0.854*vel_filtered_2[0] + 0.0728*(velocity[1]) + 0.0728*vel_filtered_2[1];
     vel_filtered_2[1] = velocity[1];
-
+    
     velocity[0] = vel_filtered_1[0];
     velocity[1] = vel_filtered_2[0];
 }

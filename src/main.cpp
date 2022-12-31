@@ -1,4 +1,4 @@
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Global variables */
 Claptrap claptrap;

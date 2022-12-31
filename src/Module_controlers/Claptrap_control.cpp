@@ -1,5 +1,5 @@
 /* Includes */
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Constructor definition */
 Claptrap::Claptrap(){

@@ -25,6 +25,9 @@
 #define MPU_SDA_PIN A4 // white 18
 #define MPU_SCL_PIN A5 // blue 19
 
+/* Global definitions */
+#define pipe 0xE8E8F0F0E1LL
+
 /* Radio data structure */
 typedef struct RADIO_DATA_STRUCT {
     byte j1PotX;

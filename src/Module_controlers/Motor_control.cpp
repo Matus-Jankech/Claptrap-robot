@@ -1,5 +1,5 @@
 /* Includes */
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Global variables */
 double P_gain[2], I_gain[2];

@@ -1,10 +1,9 @@
 /* Inludes */
-#include <Control.h>
+#include <Claptrap.h>
 
 /* Global variables */
-uint64_t pipe = 0xE8E8F0F0E1LL;
 RF24 radio(CE_PIN,CSN_PIN);
-bool radio_status = 0;
+bool radio_status = false;
 unsigned long radio_last_receive_time;
 
 /* Methods definition */
