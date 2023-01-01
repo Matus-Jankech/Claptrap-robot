@@ -4,7 +4,14 @@
 #include <DFPlayerMini_Fast.h>
 #include <RF24.h>
 
-/* Pin definitions */
+/* ISR function headers */
+void read_encoder_1();
+void read_encoder_2(); 
+
+
+//======================================
+//              Defines
+//======================================
 #define SCK_PIN 13
 #define MISO_PIN 12
 #define MOSI_PIN 11
@@ -24,11 +31,12 @@
 #define Encoder_B1_PIN A3
 #define MPU_SDA_PIN A4 // white 18
 #define MPU_SCL_PIN A5 // blue 19
-
-/* Global definitions */
 #define pipe 0xE8E8F0F0E1LL
 
-/* Radio data structure */
+
+//======================================
+//        Radio data structure
+//======================================
 typedef struct RADIO_DATA_STRUCT {
     byte j1PotX;
     byte j1PotY;
@@ -36,7 +44,10 @@ typedef struct RADIO_DATA_STRUCT {
     byte j2PotY;
 } radio_data_struct;
 
-/* Main class */
+
+//======================================
+//            Claptrap class
+//======================================
 class Claptrap {
     public:
         /* Constructor */
@@ -49,7 +60,7 @@ class Claptrap {
         void set_eye_color(uint8_t r, uint8_t g, uint8_t b);
         void MP3_play(uint8_t track_num);
         void MP3_set_volume(uint8_t volume);
-        void read_encoder(uint8_t pin);
+        void read_encoder(uint8_t encoder_B_pin);
         void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
 
         /* Variables */
@@ -86,7 +97,3 @@ class Claptrap {
         double P_gain[2], I_gain[2];
         unsigned long PID_last_calc_time;
 };
-
-/* ISR function headers */
-void read_encoder_1();
-void read_encoder_2(); 
