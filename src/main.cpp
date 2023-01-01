@@ -4,11 +4,19 @@
 Claptrap claptrap;
 bool LED_switch = true;
 
+//======================================
+//              SETUP
+//======================================
 void setup() {
     Serial.begin(115200);
     claptrap.begin();
+    attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
+    attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
 }
 
+//======================================
+//               LOOP
+//======================================
 void loop() {
     double ref_vel[2];
 
@@ -18,7 +26,6 @@ void loop() {
             ref_vel[0] = 100;
             ref_vel[1] = 0;
             if(LED_switch){
-                Serial.println("eye_green");
                 claptrap.set_eye_color(0,255,0);
                 LED_switch = false;
             }
@@ -27,7 +34,6 @@ void loop() {
             ref_vel[0] = -100;
             ref_vel[1] = 0; 
             if(!LED_switch){
-                Serial.println("eye_red");
                 claptrap.set_eye_color(255,0,0);
                 LED_switch = true;
             }
@@ -40,4 +46,15 @@ void loop() {
 
     claptrap.calculate_velocity_PID(ref_vel);
     delay(10);
+}
+
+//======================================
+//               ISR
+//======================================
+void read_encoder_1(){
+    claptrap.read_encoder(Encoder_B1_PIN);
+}
+
+void read_encoder_2(){
+     claptrap.read_encoder(Encoder_B2_PIN);
 }

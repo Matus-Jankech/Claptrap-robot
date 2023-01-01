@@ -47,25 +47,46 @@ class Claptrap {
         void read_radio(void);
         bool is_radio_connected(void);
         void set_eye_color(uint8_t r, uint8_t g, uint8_t b);
-        void MP3_play(int track_num);
-        void MP3_set_volume(int volume);
-        void calculate_velocity_PID(double* ref_vel); // Later move to private methods   
+        void MP3_play(uint8_t track_num);
+        void MP3_set_volume(uint8_t volume);
+        void read_encoder(uint8_t pin);
+        void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
 
         /* Variables */
         radio_data_struct radio_data;
 
     private:
         /* Methods */
-        void radio_init(void);
-        void LEDs_init(void);
-        void MP3_init(void);
-        void encoders_init(void);
-        void motors_init(void);     
+        void radio_begin(void);
+        void LEDs_begin(void);
+        void MP3_begin(void);
+        void encoders_begin(void);
+        void motors_begin(void);     
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void filter_velocity(double* velocity);
         void get_velocity(double* velocity);
+
+        /* Radio variables */
+        RF24 *radio;
+        bool radio_status = false;
+        unsigned long radio_last_receive_time;
+
+        /* MP3 and LEDs variables */
+        DFPlayerMini_Fast mp3;
+        Adafruit_NeoPixel pixels;
+
+        /* Encoders variables */
+        volatile long current_encoder_pos[2];
+        volatile long last_encoder_pos[2];
+        unsigned long encoders_last_read_time;
+        double vel_filtered_1[2];
+        double vel_filtered_2[2];
+
+        /* Motors variables */
+        double P_gain[2], I_gain[2];
+        unsigned long PID_last_calc_time;
 };
 
-/* Function headers*/
-void read_encoder_1(void);
-void read_encoder_2(void); 
+/* ISR function headers */
+void read_encoder_1();
+void read_encoder_2(); 

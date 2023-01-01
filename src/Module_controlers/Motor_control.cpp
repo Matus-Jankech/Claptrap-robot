@@ -1,12 +1,8 @@
 /* Includes */
 #include <Claptrap.h>
 
-/* Global variables */
-double P_gain[2], I_gain[2];
-unsigned long PID_last_calc_time;
-
 /* Methods definition */
-void Claptrap::motors_init(){
+void Claptrap::motors_begin(){
     /* Set pinmodes */
     pinMode(M1_front_PIN,OUTPUT);
     pinMode(M1_back_PIN,OUTPUT); 
@@ -87,12 +83,12 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
 
     PID_last_calc_time = micros();
     
-    /*Serial.print(ref_vel[0]);
+    Serial.print(ref_vel[0]);
     Serial.print(" , ");
     Serial.print(current_vel[0]);
     Serial.print(" , ");
     Serial.print(0);
     Serial.print(" , ");
     Serial.print(pwm[0]);
-    Serial.println(" ");*/
+    Serial.println(" ");
 }

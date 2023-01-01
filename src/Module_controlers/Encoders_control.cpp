@@ -1,24 +1,12 @@
 /* Includes */
 #include <Claptrap.h>
 
-/* Global variables */
-volatile long current_encoder_pos[2];
-volatile long last_encoder_pos[2];
-unsigned long encoders_last_read_time;
-double vel_filtered_1[2];
-double vel_filtered_2[2];
-
 /* Methods definition */
-void Claptrap::encoders_init(){
-    /* Set pinmodes */
+void Claptrap::encoders_begin(){
     pinMode(Encoder_A1_PIN,INPUT); 
     pinMode(Encoder_B1_PIN,INPUT);
     pinMode(Encoder_A2_PIN,INPUT);
     pinMode(Encoder_B2_PIN,INPUT);
-
-    /* Attach hardware interrupts */
-    attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
-    attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
 }
 
 void Claptrap::filter_velocity(double* velocity){
@@ -45,23 +33,12 @@ void Claptrap::get_velocity(double* velocity){
     last_encoder_pos[1] = current_encoder_pos[1];
 }
 
-/* ISR */
-void read_encoder_1(){
-    int b = digitalRead(Encoder_B1_PIN);
+void Claptrap::read_encoder(uint8_t pin){
+    int b = digitalRead(pin);
     if(b > 0){
         current_encoder_pos[0] = current_encoder_pos[0] - 1;
     }
     else{
         current_encoder_pos[0] = current_encoder_pos[0] + 1;
-    }
-}
-
-void read_encoder_2(){
-    int b = digitalRead(Encoder_B2_PIN);
-    if(b > 0){
-        current_encoder_pos[1] = current_encoder_pos[1] - 1;
-    }
-    else{
-        current_encoder_pos[1] = current_encoder_pos[1] + 1;
     }
 }
