@@ -14,7 +14,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
     attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
 }
-
+// Test commit from pc
 //======================================
 //               LOOP
 //======================================
