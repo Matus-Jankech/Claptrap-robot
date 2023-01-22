@@ -34,6 +34,8 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 void Claptrap::calculate_velocity_PID(double* ref_vel){
     const double Kp[2] = {0.7,0.7};
     const double Ki[2] = {4,4};
+    const int NUM_OF_MOTORS = 2;
+    const int DRY_FRICTION_CONST = 30;
     double delta_time;
     double current_vel[2];
     double error[2];
@@ -42,47 +44,42 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     /* Get current velocity on each motor */
     get_velocity(current_vel);
 
-    error[0] = ref_vel[0] - current_vel[0]; 
-    error[1] = ref_vel[1] - current_vel[1];
-    delta_time = (micros() - PID_last_calc_time)/1e6; 
+    for(int i = 0; i < NUM_OF_MOTORS; i++){
+        error[i] = ref_vel[i] - current_vel[i]; 
+        delta_time = (micros() - PID_last_calc_time)/1e6; 
 
-    /* Proportional gain */
-    P_gain[0] = Kp[0]*error[0];
-    P_gain[1] = Kp[1]*error[1];
+        /* Proportional gain */
+        P_gain[i] = Kp[i]*error[i];
 
-    /* Integral gain */
-    if((P_gain[0] + I_gain[0]) < 255 && (P_gain[0] + I_gain[0]) > -255){ // Anti-windup
-        I_gain[0] = I_gain[0] + Ki[0]*error[0]*delta_time;
-    }
-    if((P_gain[1] + I_gain[1]) < 255 && (P_gain[1] + I_gain[1]) > -255){ // Anti-windup
-        I_gain[1] = I_gain[1] + Ki[1]*error[1]*delta_time;
-    }
+        /* Integral gain */
+        if((P_gain[i] + I_gain[i]) < 255 && (P_gain[i] + I_gain[i]) > -255){ // Anti-windup
+            I_gain[i] = I_gain[i] + Ki[i]*error[i]*delta_time;
+        }
 
-    /* Input for motors */
-    pwm[0] = P_gain[0] + I_gain[0];
-    pwm[1] = P_gain[1] + I_gain[1];
+        /* Input for motors */
+        pwm[i] = P_gain[i] + I_gain[i];
+        if(pwm[i] > 0){
+            pwm[i] = pwm[i] + DRY_FRICTION_CONST;
+        }
+        else if(pwm[i] < 0){
+            pwm[i] = pwm[i] - DRY_FRICTION_CONST;
+        }
 
-    /* Saturation of inputs for motors*/
-    if(pwm[0] > 255){
-        pwm[0] = 255;
-    } 
-    else if(pwm[0] < -255){
-         pwm[0] = -255;   
-    }
-
-    if(pwm[1] > 255){
-        pwm[1] = 255;
-    } 
-    else if(pwm[1] < -255){
-         pwm[1] = -255;   
+        /* Saturation of inputs for motors*/
+        if(pwm[i] > 255){
+            pwm[i] = 255;
+        } 
+        else if(pwm[i] < -255){
+            pwm[i] = -255;   
+        }
     }
 
     /* Write values into motors */
     set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
     set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
-
     PID_last_calc_time = micros();
     
+    /* Serial output for debuging */
     Serial.print(ref_vel[0]);
     Serial.print(" , ");
     Serial.print(current_vel[0]);
