@@ -17,11 +17,13 @@ void Claptrap::motors_begin(){
 }
 
 void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
-    if(pwm_value > 35){
+    const int DRY_FRICTION_CONST = 35;
+
+    if(pwm_value > DRY_FRICTION_CONST){
         analogWrite(pin_2,0);
         analogWrite(pin_1,pwm_value);
     }  
-    else if(pwm_value < -35){
+    else if(pwm_value < -DRY_FRICTION_CONST){
         analogWrite(pin_1,0);
         analogWrite(pin_2,-pwm_value);
     }
@@ -36,6 +38,7 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     const double Ki[2] = {4,4};
     const int NUM_OF_MOTORS = 2;
     const int DRY_FRICTION_CONST = 30;
+    const int MAX_OUTPUT_PWM = 255;
     double delta_time;
     double current_vel[2];
     double error[2];
@@ -52,7 +55,7 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
         P_gain[i] = Kp[i]*error[i];
 
         /* Integral gain */
-        if((P_gain[i] + I_gain[i]) < 255 && (P_gain[i] + I_gain[i]) > -255){ // Anti-windup
+        if((P_gain[i] + I_gain[i]) < MAX_OUTPUT_PWM && (P_gain[i] + I_gain[i]) > -MAX_OUTPUT_PWM){ // Anti-windup
             I_gain[i] = I_gain[i] + Ki[i]*error[i]*delta_time;
         }
 
@@ -66,11 +69,11 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
         }
 
         /* Saturation of inputs for motors*/
-        if(pwm[i] > 255){
-            pwm[i] = 255;
+        if(pwm[i] > MAX_OUTPUT_PWM){
+            pwm[i] = MAX_OUTPUT_PWM;
         } 
-        else if(pwm[i] < -255){
-            pwm[i] = -255;   
+        else if(pwm[i] < -MAX_OUTPUT_PWM){
+            pwm[i] = -MAX_OUTPUT_PWM;   
         }
     }
 
