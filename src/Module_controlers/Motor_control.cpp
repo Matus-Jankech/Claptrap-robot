@@ -85,6 +85,7 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     Serial.print(" , ");
     Serial.print(current_vel[0]);
     Serial.print(" , ");
+<<<<<<< Updated upstream
     Serial.print(0);
     Serial.print(" , ");
     Serial.print(pwm[0]);

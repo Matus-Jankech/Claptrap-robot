@@ -26,6 +26,10 @@ void Claptrap::get_velocity(double* velocity){
     velocity[0] = velocity[0]/1020*60; // RPM
     velocity[1] = (current_encoder_pos[1] - last_encoder_pos[1])/delta_time;
     velocity[1] = velocity[1]/1020*60; // RPM
+
+    Serial.print(velocity[0]);
+    Serial.println(" ");
+
     filter_velocity(velocity);
 
     encoders_last_read_time = micros();

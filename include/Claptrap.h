@@ -8,7 +8,6 @@
 void read_encoder_1();
 void read_encoder_2(); 
 
-
 //======================================
 //              Defines
 //======================================
@@ -33,7 +32,6 @@ void read_encoder_2();
 #define MPU_SCL_PIN A5 // blue 19
 #define pipe 0xE8E8F0F0E1LL
 
-
 //======================================
 //        Radio data structure
 //======================================
@@ -43,7 +41,6 @@ typedef struct RADIO_DATA_STRUCT {
     byte j2PotX;
     byte j2PotY;
 } radio_data_struct;
-
 
 //======================================
 //            Claptrap class
