@@ -34,8 +34,6 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 }
 
 void Claptrap::calculate_velocity_PID(double* ref_vel){
-    const double Kp[2] = {0.7,0.7};
-    const double Ki[2] = {4,4};
     const int NUM_OF_MOTORS = 2;
     const int DRY_FRICTION_CONST = 30;
     const int MAX_OUTPUT_PWM = 255;
@@ -52,11 +50,11 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
         delta_time = (micros() - PID_last_calc_time)/1e6; 
 
         /* Proportional gain */
-        P_gain[i] = Kp[i]*error[i];
+        P_gain[i] = Kp_vel*error[i];
 
         /* Integral gain */
         if((P_gain[i] + I_gain[i]) < MAX_OUTPUT_PWM && (P_gain[i] + I_gain[i]) > -MAX_OUTPUT_PWM){ // Anti-windup
-            I_gain[i] = I_gain[i] + Ki[i]*error[i]*delta_time;
+            I_gain[i] = I_gain[i] + Ki_vel*error[i]*delta_time;
         }
 
         /* Input for motors */
@@ -83,12 +81,12 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     PID_last_calc_time = micros();
     
     /* Serial output for debuging */
-    Serial.print(ref_vel[0]);
+    /*Serial.print(ref_vel[0]);
     Serial.print(" , ");
     Serial.print(current_vel[0]);
     Serial.print(" , ");
     Serial.print(0);
     Serial.print(" , ");
     Serial.print(pwm[0]);
-    Serial.println(" ");
+    Serial.println(" ");*/
 }

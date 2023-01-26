@@ -45,6 +45,9 @@ void loop() {
         ref_vel[1] = 0;      
     }
 
+    /* Serial COM test*/
+    claptrap.read_serial();
+
     claptrap.calculate_velocity_PID(ref_vel);
     delay(10);
 }

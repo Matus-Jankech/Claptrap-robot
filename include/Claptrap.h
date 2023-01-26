@@ -61,6 +61,8 @@ class Claptrap {
         void MP3_play(uint8_t track_num);
         void MP3_set_volume(uint8_t volume);
         void read_encoder(uint8_t encoder_B_pin);
+        void send_serial(char ident);
+        void read_serial(void);
         void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
 
         /* Variables */
@@ -94,6 +96,7 @@ class Claptrap {
         double vel_filtered_2[2];
 
         /* Motors variables */
+        double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
         double P_gain[2], I_gain[2];
         unsigned long PID_last_calc_time;
 };
