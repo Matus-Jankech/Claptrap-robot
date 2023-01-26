@@ -79,15 +79,4 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
     set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
     PID_last_calc_time = micros();
-    
-    /* Serial output for debuging */
-    /*Serial.print(ref_vel[0]);
-    Serial.print(" , ");
-    Serial.print(current_vel[0]);
-    Serial.print(" , ");
-<<<<<<< Updated upstream
-    Serial.print(0);
-    Serial.print(" , ");
-    Serial.print(pwm[0]);
-    Serial.println(" ");*/
 }
