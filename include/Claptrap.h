@@ -3,6 +3,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <DFPlayerMini_Fast.h>
 #include <RF24.h>
+#include <Wire.h>
 
 /* ISR function headers */
 void read_encoder_1();
@@ -61,6 +62,9 @@ class Claptrap {
         void send_serial(char ident);
         void read_serial(void);
         void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
+        void read_acc(void);
+        void read_gyro(void); // Later move to private methods 
+        void calibrate_gyro(void); 
 
         /* Variables */
         radio_data_struct radio_data;
@@ -71,7 +75,8 @@ class Claptrap {
         void LEDs_begin(void);
         void MP3_begin(void);
         void encoders_begin(void);
-        void motors_begin(void);     
+        void motors_begin(void); 
+        void MPU_begin(void);    
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void filter_velocity(double* velocity);
         void get_velocity(double* velocity);
@@ -96,4 +101,8 @@ class Claptrap {
         double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
         double P_gain[2], I_gain[2];
         unsigned long PID_last_calc_time;
+
+        /* Acc + Gyro variables */
+        double rollRate, pitchRate, yawRate;
+        double rollAngle, pitchAngle;
 };

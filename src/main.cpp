@@ -13,8 +13,9 @@ void setup() {
     claptrap.begin();
     attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
     attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
+    //claptrap.calibrate_gyro();
 }
-// Test commit from pc
+
 //======================================
 //               LOOP
 //======================================
@@ -46,7 +47,11 @@ void loop() {
     }
 
     /* Serial COM test*/
-    claptrap.read_serial();
+    //claptrap.read_serial();
+
+    /* MPU test */
+    //claptrap.read_gyro();
+    claptrap.read_acc();
 
     claptrap.calculate_velocity_PID(ref_vel);
     delay(10);

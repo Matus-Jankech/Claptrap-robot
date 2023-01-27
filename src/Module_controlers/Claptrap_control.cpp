@@ -7,19 +7,20 @@ Claptrap::Claptrap(){}
 /* Method definitions */
 void Claptrap::begin(){
     motors_begin();
+    MPU_begin();
     MP3_begin();
     encoders_begin();
     radio_begin();
     LEDs_begin();
 }
 
-void Claptrap::send_serial(char ident){
+void Claptrap::send_serial(char identByte){
     if(Serial.availableForWrite()){
-        char buffer[50];
+        char buffer[100];
 
-        switch(ident){
+        switch(identByte){
             case 'V':
-                sprintf(buffer,"%c;%lf;%lf;%lf;",'v',Kp_vel,Ki_vel,Kd_vel);
+                sprintf(buffer,"%c;%lf;%lf;%lf\n",'v',Kp_vel,Ki_vel,Kd_vel);
                 Serial.write(buffer);
             break;
         }
@@ -42,7 +43,7 @@ void Claptrap::read_serial(){
         identByte = buffer[0];
         switch(identByte){
             case 'V':
-                Claptrap::send_serial('V');
+                send_serial('V');
             break;
 
             case 'v':
