@@ -12,7 +12,7 @@ void Claptrap::set_eye_color(uint8_t r, uint8_t g, uint8_t b){
 void Claptrap::LEDs_begin(){
     pixels = Adafruit_NeoPixel(4, Leds_PIN, NEO_GRBW + NEO_KHZ800);
     pixels.begin(); 
-    set_eye_color(0,0,255);
+    Claptrap::set_eye_color(0,0,255);
     pixels.setBrightness(255);
     pixels.show();
 }

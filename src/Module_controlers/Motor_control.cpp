@@ -43,7 +43,7 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     int16_t pwm[2];
     
     /* Get current velocity on each motor */
-    get_velocity(current_vel);
+    Claptrap::get_velocity(current_vel);
 
     for(int i = 0; i < NUM_OF_MOTORS; i++){
         error[i] = ref_vel[i] - current_vel[i]; 
@@ -76,7 +76,7 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     }
 
     /* Write values into motors */
-    set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
-    set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
+    Claptrap::set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
+    Claptrap::set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
     PID_last_calc_time = micros();
 }

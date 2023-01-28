@@ -13,6 +13,6 @@ void Claptrap::MP3_set_volume(uint8_t volume){
 void Claptrap::MP3_begin(){  
     Serial1.begin(9600);
     mp3.begin(Serial1);
-    MP3_set_volume(10);
-    MP3_play(2);
+    Claptrap::MP3_set_volume(10);
+    Claptrap::MP3_play(2);
 }

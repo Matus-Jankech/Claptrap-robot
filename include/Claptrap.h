@@ -61,10 +61,16 @@ class Claptrap {
         void read_encoder(uint8_t encoder_B_pin);
         void send_serial(char ident);
         void read_serial(void);
+        void read_MPU(void);
+
+        // Later move to private methods 
         void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
         void read_acc(void);
-        void read_gyro(void); // Later move to private methods 
+        void read_gyro(void); 
+        void integrate_gyro(void);
         void calibrate_gyro(void); 
+        void kalman_filter(void);
+        void inicialize_MPU_values(void);
 
         /* Variables */
         radio_data_struct radio_data;
@@ -103,6 +109,7 @@ class Claptrap {
         unsigned long PID_last_calc_time;
 
         /* Acc + Gyro variables */
-        double rollRate, pitchRate, yawRate;
-        double rollAngle, pitchAngle;
+        double gyro_rates[3], gyro_angles[2], acc_angles[2]; 
+        double kalman_angles[2], kalman_uncertainty_angles[2];
+        unsigned long last_gyro_read_time = 0;
 };

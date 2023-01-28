@@ -50,8 +50,8 @@ void loop() {
     //claptrap.read_serial();
 
     /* MPU test */
-    //claptrap.read_gyro();
     claptrap.read_acc();
+    claptrap.read_gyro();
 
     claptrap.calculate_velocity_PID(ref_vel);
     delay(10);

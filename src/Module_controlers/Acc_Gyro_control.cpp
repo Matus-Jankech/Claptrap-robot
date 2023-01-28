@@ -28,6 +28,28 @@ void Claptrap::MPU_begin(){
     Wire.write(0x1B); // Gyro scalling register
     Wire.write(0x8); // +-500 deg/s 
     Wire.endTransmission();
+
+    Claptrap::inicialize_MPU_values();
+}
+
+void Claptrap::inicialize_MPU_values(){
+    Claptrap::read_acc();
+    gyro_angles[0] = acc_angles[0];
+    gyro_angles[1] = acc_angles[1];
+    kalman_angles[0] = acc_angles[0];
+    kalman_angles[1] = acc_angles[1];
+    kalman_uncertainty_angles[0] = 2*2;
+    kalman_uncertainty_angles[1] = 2*2;
+}
+
+void Claptrap::read_MPU(){
+    Claptrap::read_acc();
+    Claptrap::read_gyro();
+    Claptrap::kalman_filter();
+
+    Serial.print(acc_angles[1],3);
+    Serial.print(" , ");
+    Serial.println(gyro_angles[1],3);
 }
 
 void Claptrap::read_acc(void){
@@ -47,20 +69,8 @@ void Claptrap::read_acc(void){
     accY = (double)accYLSB/4096 + 0.0;
     accZ = (double)accZLSB/4096 + 0.03;
 
-    rollAngle = atan(accY/sqrt(pow(accX,2)+pow(accZ,2)))*180/PI;
-    pitchAngle = atan(-accX/sqrt(pow(accY,2)+pow(accZ,2)))*180/PI;
-
-    /*Serial.print("AccX: ");
-    Serial.print(accX,3);
-    Serial.print("  AccY:");
-    Serial.print(accY,3);
-    Serial.print("  AccZ:");
-    Serial.println(accZ,3);*/
-
-    Serial.print("  roll [deg]:");
-    Serial.print(rollAngle,3);
-    Serial.print("  pitch [deg]:");
-    Serial.println(pitchAngle,3);
+    acc_angles[0] = atan(accY/sqrt(pow(accX,2)+pow(accZ,2)))*180/PI;
+    acc_angles[1] = atan(-accX/sqrt(pow(accY,2)+pow(accZ,2)))*180/PI;
 }
 
 void Claptrap::read_gyro(){
@@ -75,26 +85,34 @@ void Claptrap::read_gyro(){
     gyroY = Wire.read()<<8 | Wire.read();
     gyroZ = Wire.read()<<8 | Wire.read();
 
-    rollRate = (double)gyroX/65.5 + 1.91577;
-    pitchRate = (double)gyroY/65.5 + 1.02266;
-    yawRate = (double)gyroZ/65.5 - 0.51854;
+    gyro_rates[0] = (double)gyroX/65.5 + 1.91577;
+    gyro_rates[1] = (double)gyroY/65.5 + 1.02266;
+    gyro_rates[2] = (double)gyroZ/65.5 - 0.51854;
+    Claptrap::integrate_gyro();
+}
 
-    Serial.print("Roll rate: ");
-    Serial.print(rollRate);
-    Serial.print("  Pitch rate:");
-    Serial.print(pitchRate);
-    Serial.print("  Yaw rate:");
-    Serial.println(yawRate);
+void Claptrap::integrate_gyro(void){
+    unsigned long current_time = millis();
+    float delta_time = (float)(current_time-last_gyro_read_time)/1000.0;
+
+    gyro_angles[0] += gyro_rates[0]*delta_time;
+    gyro_angles[1] += gyro_rates[1]*delta_time;
+
+    last_gyro_read_time = current_time;
+}
+
+void Claptrap::kalman_filter(void){
+    
 }
 
 void Claptrap::calibrate_gyro(){
     double calibRateRoll = 0, calibRatePitch = 0, calibRateYaw = 0;
     
     for(int i = 0; i < 2000; i++){
-       read_gyro(); 
-       calibRateRoll += rollRate;
-       calibRatePitch += pitchRate;
-       calibRateYaw += yawRate;
+       Claptrap::read_gyro(); 
+       calibRateRoll += gyro_rates[0];
+       calibRatePitch += gyro_rates[1];
+       calibRateYaw += gyro_rates[2];
        delay(1);
     }
 
