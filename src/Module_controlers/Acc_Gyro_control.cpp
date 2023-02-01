@@ -11,7 +11,7 @@ void Claptrap::MPU_begin(){
     Wire.beginTransmission(0x68);
     Wire.write(0x6B); // Power register
     Wire.write(0x00); // Power on
-     Wire.endTransmission();
+    Wire.endTransmission();
  
     /* Acc and Gyro setup */
     Wire.beginTransmission(0x68); 
@@ -49,7 +49,9 @@ void Claptrap::read_MPU(){
 
     Serial.print(acc_angles[1],3);
     Serial.print(" , ");
-    Serial.println(gyro_angles[1],3);
+    Serial.print(gyro_angles[1],3);
+    Serial.print(" , ");
+    Serial.println(angles_filtered[1],3);
 }
 
 void Claptrap::read_acc(void){
@@ -92,8 +94,8 @@ void Claptrap::read_gyro(){
 }
 
 void Claptrap::integrate_gyro(void){
-    unsigned long current_time = millis();
-    float delta_time = (float)(current_time-last_gyro_read_time)/1000.0;
+    unsigned long current_time = micros();
+    float delta_time = (float)(current_time-last_gyro_read_time)/1e6;
 
     gyro_angles[0] += gyro_rates[0]*delta_time;
     gyro_angles[1] += gyro_rates[1]*delta_time;
@@ -102,7 +104,20 @@ void Claptrap::integrate_gyro(void){
 }
 
 void Claptrap::kalman_filter(void){
-    
+    unsigned long current_time = micros();
+    double delta_time = (double)(current_time-last_MPU_filter_time)/1e6;
+    float kalman_gain[2];
+
+    for(int i = 0; i < 2; i++){
+        kalman_angles[i] = kalman_angles[i] + gyro_rates[i]*delta_time;
+        kalman_uncertainty_angles[i] = kalman_uncertainty_angles[i] + pow(delta_time,2)*pow(4,2);
+        kalman_gain[i] =  kalman_uncertainty_angles[i]/(kalman_uncertainty_angles[i] + pow(3,2));
+        kalman_angles[i] = kalman_angles[i] + kalman_gain[i]*(acc_angles[i] - kalman_angles[i]);
+        kalman_uncertainty_angles[i] = (1 - kalman_gain[i])*kalman_uncertainty_angles[i];
+        angles_filtered[i] = kalman_angles[i];
+    }
+
+    last_MPU_filter_time = current_time;
 }
 
 void Claptrap::calibrate_gyro(){

@@ -59,11 +59,12 @@ class Claptrap {
         void MP3_play(uint8_t track_num);
         void MP3_set_volume(uint8_t volume);
         void read_encoder(uint8_t encoder_B_pin);
-        void send_serial(char ident);
+        void write_serial(char ident);
         void read_serial(void);
         void read_MPU(void);
 
         // Later move to private methods 
+        void calculate_tilt_PID(double ref_tilt);
         void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
         void read_acc(void);
         void read_gyro(void); 
@@ -103,13 +104,17 @@ class Claptrap {
         double vel_filtered_1[2];
         double vel_filtered_2[2];
 
-        /* Motors variables */
+        /* Motor (PID) variables */
         double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
-        double P_gain[2], I_gain[2];
-        unsigned long PID_last_calc_time;
+        double Kp_tilt = 0, Ki_tilt = 0, Kd_tilt = 0;
+        double P_vel_gain[2], I_vel_gain[2];
+        double P_tilt_gain, I_tilt_gain, D_tilt_gain;
+        unsigned long PID_vel_last_calc_time;
 
         /* Acc + Gyro variables */
         double gyro_rates[3], gyro_angles[2], acc_angles[2]; 
         double kalman_angles[2], kalman_uncertainty_angles[2];
+        double angles_filtered[2]; 
         unsigned long last_gyro_read_time = 0;
+        unsigned long last_MPU_filter_time = 0;
 };

@@ -4,6 +4,7 @@
 /* Global variables */
 Claptrap claptrap;
 bool LED_switch = true;
+double ref_vel[2];
 
 //======================================
 //              SETUP
@@ -20,8 +21,6 @@ void setup() {
 //               LOOP
 //======================================
 void loop() {
-    double ref_vel[2];
-
     if(claptrap.is_radio_connected()){
         claptrap.read_radio();
         if(claptrap.radio_data.j1PotX == 0){
@@ -50,8 +49,7 @@ void loop() {
     //claptrap.read_serial();
 
     /* MPU test */
-    claptrap.read_acc();
-    claptrap.read_gyro();
+    claptrap.read_MPU();
 
     claptrap.calculate_velocity_PID(ref_vel);
     delay(10);

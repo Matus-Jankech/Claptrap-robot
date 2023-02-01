@@ -14,7 +14,7 @@ void Claptrap::begin(){
     LEDs_begin();
 }
 
-void Claptrap::send_serial(char identByte){
+void Claptrap::write_serial(char identByte){
     if(Serial.availableForWrite()){
         char buffer[100];
 
@@ -43,7 +43,7 @@ void Claptrap::read_serial(){
         identByte = buffer[0];
         switch(identByte){
             case 'V':
-                send_serial('V');
+                write_serial('V');
             break;
 
             case 'v':

@@ -37,9 +37,9 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     const int NUM_OF_MOTORS = 2;
     const int DRY_FRICTION_CONST = 30;
     const int MAX_OUTPUT_PWM = 255;
-    double delta_time;
-    double current_vel[2];
-    double error[2];
+    unsigned long current_time = micros();
+    double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
+    double current_vel[2], error[2];
     int16_t pwm[2];
     
     /* Get current velocity on each motor */
@@ -47,18 +47,17 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
 
     for(int i = 0; i < NUM_OF_MOTORS; i++){
         error[i] = ref_vel[i] - current_vel[i]; 
-        delta_time = (micros() - PID_last_calc_time)/1e6; 
 
         /* Proportional gain */
-        P_gain[i] = Kp_vel*error[i];
+        P_vel_gain[i] = Kp_vel*error[i];
 
         /* Integral gain */
-        if((P_gain[i] + I_gain[i]) < MAX_OUTPUT_PWM && (P_gain[i] + I_gain[i]) > -MAX_OUTPUT_PWM){ // Anti-windup
-            I_gain[i] = I_gain[i] + Ki_vel*error[i]*delta_time;
+        if((P_vel_gain[i] + I_vel_gain[i]) < MAX_OUTPUT_PWM && (P_vel_gain[i] + I_vel_gain[i]) > -MAX_OUTPUT_PWM){ // Anti-windup
+            I_vel_gain[i] = I_vel_gain[i] + Ki_vel*error[i]*delta_time;
         }
 
         /* Input for motors */
-        pwm[i] = P_gain[i] + I_gain[i];
+        pwm[i] = P_vel_gain[i] + I_vel_gain[i];
         if(pwm[i] > 0){
             pwm[i] = pwm[i] + DRY_FRICTION_CONST;
         }
@@ -78,5 +77,14 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     /* Write values into motors */
     Claptrap::set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
     Claptrap::set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
-    PID_last_calc_time = micros();
+    PID_vel_last_calc_time = current_time;
+}
+
+void Claptrap::calculate_tilt_PID(double ref_tilt){
+    /*const int MAX_OUTPUT_VEL = 60;
+    unsigned long current_time = micros();
+    double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
+    double error[2], vel[2];*/
+
+
 }
