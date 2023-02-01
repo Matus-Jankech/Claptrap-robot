@@ -25,28 +25,30 @@ void loop() {
     if(claptrap.is_radio_connected()){
         claptrap.read_radio();
         if(claptrap.radio_data.j1PotX == 0){
-            ref_vel[1] = 80;
-            ref_vel[0] = 0;
             if(LED_switch){
                 claptrap.set_eye_color(0,255,0);
                 LED_switch = false;
             }
         }
         else{
-            ref_vel[1] = -80;
-            ref_vel[0] = 0; 
             if(!LED_switch){
+                claptrap.inicialize_PID_values();
                 claptrap.set_eye_color(255,0,0);
                 LED_switch = true;
             }
         }
+
+        ref_tilt = 0;
+        claptrap.calculate_tilt_PID(ref_tilt);
     }
     else{
+        LED_switch = false;
         ref_vel[0] = 0;
-        ref_vel[1] = 0;      
+        ref_vel[1] = 0;   
+        claptrap.calculate_velocity_PID(ref_vel);   
     }
 
-    claptrap.calculate_velocity_PID(ref_vel);
+    
     /* Serial COM test*/
     //claptrap.read_serial();
 

@@ -42,17 +42,14 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     double current_vel[2], error[2];
     int16_t pwm[2];
     
-    /* Get current velocity on each motor */
     Claptrap::get_velocity(current_vel);
-
     for(int i = 0; i < NUM_OF_MOTORS; i++){
         error[i] = ref_vel[i] - current_vel[i]; 
 
-        /* Proportional gain */
+        /* PI gains */
         P_vel_gain[i] = Kp_vel*error[i];
-
-        /* Integral gain */
-        if((P_vel_gain[i] + I_vel_gain[i]) < MAX_OUTPUT_PWM && (P_vel_gain[i] + I_vel_gain[i]) > -MAX_OUTPUT_PWM){ // Anti-windup
+        if((P_vel_gain[i] + I_vel_gain[i]) < MAX_OUTPUT_PWM && (P_vel_gain[i] + I_vel_gain[i]) > -MAX_OUTPUT_PWM) // Anti-windup
+        { 
             I_vel_gain[i] = I_vel_gain[i] + Ki_vel*error[i]*delta_time;
         }
 
@@ -78,34 +75,24 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     Claptrap::set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
     Claptrap::set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
     PID_vel_last_calc_time = current_time;
-
-
-    Serial.print(ref_vel[1]);
-    Serial.print(" , ");
-    Serial.print(current_vel[1]);
-    Serial.print(" , ");
-    Serial.println(error[1]);
 }
 
 void Claptrap::calculate_tilt_PID(double ref_tilt){
-    const int MAX_OUTPUT_VEL = 60;
+    const int MAX_OUTPUT_VEL = 100;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_tilt_last_calc_time)/1e6;
     double error, current_tilt[2], ref_vel[2];
 
-    /* Read current tilt of robot */
+    /* Get error */
     Claptrap::read_MPU(current_tilt);
-    error = ref_tilt - current_tilt[1]; 
+    error = -1*(ref_tilt - current_tilt[1]); 
 
-    /* Proportional gain */
+    /* PID gains */
     P_tilt_gain = Kp_tilt*error;
-
-    /* Integral gain */
-    if((P_tilt_gain + I_tilt_gain) < MAX_OUTPUT_VEL && (P_tilt_gain + I_tilt_gain) > -MAX_OUTPUT_VEL){ // Anti-windup
+    if((P_tilt_gain + I_tilt_gain) < MAX_OUTPUT_VEL && (P_tilt_gain + I_tilt_gain) > -MAX_OUTPUT_VEL)  // Anti-windup
+    {
         I_tilt_gain = I_tilt_gain + Ki_tilt*error*delta_time;
     }
-
-    /* Derivative gain */
     D_tilt_gain = Kd_tilt*(error - last_error)*delta_time;
 
     /* Input for velocity controller */
@@ -125,4 +112,9 @@ void Claptrap::calculate_tilt_PID(double ref_tilt){
     Claptrap::calculate_velocity_PID(ref_vel);
     last_error = error;
     PID_tilt_last_calc_time = current_time;
+}
+
+void Claptrap::inicialize_PID_values(){
+    PID_vel_last_calc_time = micros();
+    PID_tilt_last_calc_time = micros();
 }

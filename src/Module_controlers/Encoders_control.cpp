@@ -20,7 +20,8 @@ void Claptrap::filter_velocity(double* velocity){
 }
 
 void Claptrap::get_velocity(double* velocity){
-    double delta_time = ((double)(micros() - encoders_last_read_time)/1.0e6);
+    unsigned long current_time = micros();
+    double delta_time = ((double)(current_time - encoders_last_read_time)/1.0e6);
 
     velocity[0] = (current_encoder_pos[0] - last_encoder_pos[0])/delta_time;
     velocity[0] = velocity[0]/1020*60; // RPM
@@ -28,7 +29,7 @@ void Claptrap::get_velocity(double* velocity){
     velocity[1] = velocity[1]/1020*60; // RPM
     Claptrap::filter_velocity(velocity);
 
-    encoders_last_read_time = micros();
+    encoders_last_read_time = current_time;
     last_encoder_pos[0] = current_encoder_pos[0];
     last_encoder_pos[1] = current_encoder_pos[1];
 }

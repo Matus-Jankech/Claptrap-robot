@@ -72,6 +72,7 @@ class Claptrap {
         void calibrate_gyro(void); 
         void kalman_filter(double* angles);
         void inicialize_MPU_values(void);
+        void inicialize_PID_values(void);
 
         /* Variables */
         radio_data_struct radio_data;
@@ -106,7 +107,7 @@ class Claptrap {
 
         /* Motor (PID) variables */
         double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
-        double Kp_tilt = 0.08, Ki_tilt = 0, Kd_tilt = 0;
+        double Kp_tilt = 3, Ki_tilt = 5, Kd_tilt = 0.5;
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
         unsigned long PID_vel_last_calc_time;
