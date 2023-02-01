@@ -25,8 +25,8 @@ void read_encoder_2();
 #define MPU_int_PIN 2
 #define MP3_Rx_PIN 1 // yellow
 #define MP3_Tx_PIN 0 // blue
-#define Encoder_A2_PIN A0
-#define Encoder_B2_PIN A1
+#define Encoder_A2_PIN A1
+#define Encoder_B2_PIN A0
 #define Encoder_A1_PIN A2
 #define Encoder_B1_PIN A3
 #define MPU_SDA_PIN A4 // white 18
@@ -58,7 +58,7 @@ class Claptrap {
         void set_eye_color(uint8_t r, uint8_t g, uint8_t b);
         void MP3_play(uint8_t track_num);
         void MP3_set_volume(uint8_t volume);
-        void read_encoder(uint8_t encoder_B_pin);
+        void read_encoder(uint8_t encoder_B_pin, uint8_t index);
         void write_serial(char ident);
         void read_serial(void);
         void read_MPU(double* angles);

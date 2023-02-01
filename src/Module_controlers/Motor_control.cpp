@@ -80,11 +80,11 @@ void Claptrap::calculate_velocity_PID(double* ref_vel){
     PID_vel_last_calc_time = current_time;
 
 
-    Serial.print(ref_vel[0]);
+    Serial.print(ref_vel[1]);
     Serial.print(" , ");
-    Serial.print(current_vel[0]);
+    Serial.print(current_vel[1]);
     Serial.print(" , ");
-    Serial.println(error[0]);
+    Serial.println(error[1]);
 }
 
 void Claptrap::calculate_tilt_PID(double ref_tilt){

@@ -33,12 +33,12 @@ void Claptrap::get_velocity(double* velocity){
     last_encoder_pos[1] = current_encoder_pos[1];
 }
 
-void Claptrap::read_encoder(uint8_t encoder_B_pin){
+void Claptrap::read_encoder(uint8_t encoder_B_pin, uint8_t index){
     int b = digitalRead(encoder_B_pin);
     if(b > 0){
-        current_encoder_pos[0] = current_encoder_pos[0] - 1;
+        current_encoder_pos[index] = current_encoder_pos[index] - 1;
     }
     else{
-        current_encoder_pos[0] = current_encoder_pos[0] + 1;
+        current_encoder_pos[index] = current_encoder_pos[index] + 1;
     }
 }
