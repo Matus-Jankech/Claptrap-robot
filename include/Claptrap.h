@@ -61,7 +61,7 @@ class Claptrap {
         void read_encoder(uint8_t encoder_B_pin);
         void write_serial(char ident);
         void read_serial(void);
-        void read_MPU(void);
+        void read_MPU(double* angles);
 
         // Later move to private methods 
         void calculate_tilt_PID(double ref_tilt);
@@ -70,7 +70,7 @@ class Claptrap {
         void read_gyro(void); 
         void integrate_gyro(void);
         void calibrate_gyro(void); 
-        void kalman_filter(void);
+        void kalman_filter(double* angles);
         void inicialize_MPU_values(void);
 
         /* Variables */
@@ -106,10 +106,11 @@ class Claptrap {
 
         /* Motor (PID) variables */
         double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
-        double Kp_tilt = 0, Ki_tilt = 0, Kd_tilt = 0;
+        double Kp_tilt = 0.08, Ki_tilt = 0, Kd_tilt = 0;
         double P_vel_gain[2], I_vel_gain[2];
-        double P_tilt_gain, I_tilt_gain, D_tilt_gain;
+        double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
         unsigned long PID_vel_last_calc_time;
+        unsigned long PID_tilt_last_calc_time;
 
         /* Acc + Gyro variables */
         double gyro_rates[3], gyro_angles[2], acc_angles[2]; 

@@ -4,6 +4,7 @@
 /* Global variables */
 Claptrap claptrap;
 bool LED_switch = true;
+double ref_tilt;
 double ref_vel[2];
 
 //======================================
@@ -24,34 +25,32 @@ void loop() {
     if(claptrap.is_radio_connected()){
         claptrap.read_radio();
         if(claptrap.radio_data.j1PotX == 0){
-            ref_vel[0] = 100;
-            ref_vel[1] = 0;
+            ref_tilt = 0;
             if(LED_switch){
                 claptrap.set_eye_color(0,255,0);
                 LED_switch = false;
             }
         }
         else{
-            ref_vel[0] = -100;
-            ref_vel[1] = 0; 
             if(!LED_switch){
                 claptrap.set_eye_color(255,0,0);
                 LED_switch = true;
             }
         }
+
+        ref_vel[0] = 60;
+        ref_vel[1] = 60;
+        //claptrap.calculate_tilt_PID(ref_tilt);
     }
     else{
         ref_vel[0] = 0;
-        ref_vel[1] = 0;      
+        ref_vel[1] = 0;
     }
 
+    claptrap.calculate_velocity_PID(ref_vel);
     /* Serial COM test*/
     //claptrap.read_serial();
 
-    /* MPU test */
-    claptrap.read_MPU();
-
-    claptrap.calculate_velocity_PID(ref_vel);
     delay(10);
 }
 
