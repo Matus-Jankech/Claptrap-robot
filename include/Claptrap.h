@@ -62,17 +62,16 @@ class Claptrap {
         void write_serial(char ident);
         void read_serial(void);
         void read_MPU(double* angles);
-
-        // Later move to private methods 
-        void calculate_tilt_PID(double ref_tilt);
-        void calculate_velocity_PID(double* ref_vel); // Later move to private methods  
-        void read_acc(void);
-        void read_gyro(void); 
-        void integrate_gyro(void);
-        void calibrate_gyro(void); 
-        void kalman_filter(double* angles);
+        void set_ref_vel(double* vel);
+        void set_ref_tilt(double tilt);
+        void set_motor_stop_flag(bool state);
         void inicialize_MPU_values(void);
         void inicialize_PID_values(void);
+        void calibrate_gyro(void); 
+
+        // Later move to private methods 
+        void calculate_tilt_PID();
+        void calculate_velocity_PID(); 
 
         /* Variables */
         radio_data_struct radio_data;
@@ -88,6 +87,10 @@ class Claptrap {
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void filter_velocity(double* velocity);
         void get_velocity(double* velocity);
+        void read_acc(void);
+        void read_gyro(void); 
+        void integrate_gyro(void);
+        void kalman_filter(double* angles);
 
         /* Radio variables */
         RF24 *radio;
@@ -110,8 +113,10 @@ class Claptrap {
         double Kp_tilt = 3, Ki_tilt = 5, Kd_tilt = 0.5;
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
+        double ref_vel[2], ref_tilt;
         unsigned long PID_vel_last_calc_time;
         unsigned long PID_tilt_last_calc_time;
+        bool motor_stop_flag;
 
         /* Acc + Gyro variables */
         double gyro_rates[3], gyro_angles[2], acc_angles[2]; 

@@ -46,12 +46,6 @@ void Claptrap::read_MPU(double* angles){
     Claptrap::read_acc();
     Claptrap::read_gyro();
     Claptrap::kalman_filter(angles);
-
-    /*Serial.print(acc_angles[1],3);
-    Serial.print(" , ");
-    Serial.print(gyro_angles[1],3);
-    Serial.print(" , ");
-    Serial.println(angles[1],3);*/
 }
 
 void Claptrap::read_acc(void){

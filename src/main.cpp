@@ -4,14 +4,13 @@
 /* Global variables */
 Claptrap claptrap;
 bool LED_switch = true;
-double ref_tilt;
 double ref_vel[2];
+unsigned long Last_serial_timer;
 
 //======================================
 //              SETUP
 //======================================
 void setup() {
-    Serial.begin(115200);
     claptrap.begin();
     attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
     attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
@@ -26,6 +25,7 @@ void loop() {
         claptrap.read_radio();
         if(claptrap.radio_data.j1PotX == 0){
             if(LED_switch){
+                claptrap.set_motor_stop_flag(false); 
                 claptrap.set_eye_color(0,255,0);
                 LED_switch = false;
             }
@@ -33,24 +33,26 @@ void loop() {
         else{
             if(!LED_switch){
                 claptrap.inicialize_PID_values();
+                claptrap.set_motor_stop_flag(false); 
                 claptrap.set_eye_color(255,0,0);
                 LED_switch = true;
             }
         }
-
-        ref_tilt = 0;
-        claptrap.calculate_tilt_PID(ref_tilt);
     }
     else{
         LED_switch = false;
-        ref_vel[0] = 0;
-        ref_vel[1] = 0;   
-        claptrap.calculate_velocity_PID(ref_vel);   
+        claptrap.set_motor_stop_flag(true); 
     }
 
-    
+    claptrap.set_ref_tilt(80);
+    claptrap.calculate_tilt_PID();
+
     /* Serial COM test*/
-    //claptrap.read_serial();
+    claptrap.read_serial();
+    if(millis() - Last_serial_timer > 200){
+        Last_serial_timer = millis();
+        claptrap.write_serial('S');
+    }
 
     delay(10);
 }
