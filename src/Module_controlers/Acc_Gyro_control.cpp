@@ -42,10 +42,10 @@ void Claptrap::inicialize_MPU_values(){
     kalman_uncertainty_angles[1] = 2*2;
 }
 
-void Claptrap::read_MPU(double* angles){
+void Claptrap::read_MPU(){
     Claptrap::read_acc();
     Claptrap::read_gyro();
-    Claptrap::kalman_filter(angles);
+    Claptrap::kalman_filter();
 }
 
 void Claptrap::read_acc(void){
@@ -97,7 +97,7 @@ void Claptrap::integrate_gyro(void){
     last_gyro_read_time = current_time;
 }
 
-void Claptrap::kalman_filter(double* angles){
+void Claptrap::kalman_filter(){
     unsigned long current_time = micros();
     double delta_time = (double)(current_time-last_MPU_filter_time)/1e6;
     float kalman_gain[2];
@@ -108,7 +108,7 @@ void Claptrap::kalman_filter(double* angles){
         kalman_gain[i] =  kalman_uncertainty_angles[i]/(kalman_uncertainty_angles[i] + pow(3,2));
         kalman_angles[i] = kalman_angles[i] + kalman_gain[i]*(acc_angles[i] - kalman_angles[i]);
         kalman_uncertainty_angles[i] = (1 - kalman_gain[i])*kalman_uncertainty_angles[i];
-        angles[i] = kalman_angles[i];
+        angles_filtered[i] = kalman_angles[i];
     }
 
     last_MPU_filter_time = current_time;

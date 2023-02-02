@@ -45,17 +45,17 @@ void loop() {
     }
 
     /* Dry friction test */
-    claptrap.set_motor_pwm(claptrap.manual_pwm[0],M1_front_PIN,M1_back_PIN);
-    claptrap.set_motor_pwm(claptrap.manual_pwm[1],M2_front_PIN,M2_back_PIN);
+    //claptrap.set_motor_pwm(claptrap.manual_pwm[0],M1_front_PIN,M1_back_PIN);
+    //claptrap.set_motor_pwm(claptrap.manual_pwm[1],M2_front_PIN,M2_back_PIN);
 
-    claptrap.set_ref_tilt(80);
+    claptrap.set_ref_tilt(0);
     claptrap.calculate_tilt_PID();
 
     /* Serial COM test*/
     claptrap.read_serial();
     if(millis() - Last_serial_timer > 200){
         Last_serial_timer = millis();
-        claptrap.write_serial('S');
+        claptrap.write_serial('D');
     }
 
     delay(10);

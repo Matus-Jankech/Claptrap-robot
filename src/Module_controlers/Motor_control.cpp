@@ -52,7 +52,7 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 //======================================
 void Claptrap::calculate_velocity_PID(){
     const int NUM_OF_MOTORS = 2;
-    const int DRY_FRICTION_CONST = 35;
+    const int DRY_FRICTION_CONST[2] = {45,45};
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
@@ -77,11 +77,11 @@ void Claptrap::calculate_velocity_PID(){
 
         /* Input for motors */
         pwm[i] = P_vel_gain[i] + I_vel_gain[i];
-        if(pwm[i] > 0){
-            pwm[i] = pwm[i] + DRY_FRICTION_CONST;
+        if(ref_vel[i] > 0){
+            pwm[i] = pwm[i] + DRY_FRICTION_CONST[i];
         }
-        else if(pwm[i] < 0){
-            pwm[i] = pwm[i] - DRY_FRICTION_CONST;
+        else if(ref_vel[i] < 0){
+            pwm[i] = pwm[i] - DRY_FRICTION_CONST[i];
         }
 
         /* Saturation of inputs for motors*/
@@ -94,8 +94,8 @@ void Claptrap::calculate_velocity_PID(){
     }
 
     /* Write values into motors */
-    /*Claptrap::set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
-    Claptrap::set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);*/
+    Claptrap::set_motor_pwm(pwm[0],M1_front_PIN,M1_back_PIN);
+    Claptrap::set_motor_pwm(pwm[1],M2_front_PIN,M2_back_PIN);
     PID_vel_last_calc_time = current_time;
 }
 
@@ -106,11 +106,11 @@ void Claptrap::calculate_tilt_PID(){
     const int MAX_OUTPUT_VEL = 100;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_tilt_last_calc_time)/1e6;
-    double error, current_tilt[2], ref_vel[2];
+    double error, ref_vel[2];
 
     /* Get error */
-    Claptrap::read_MPU(current_tilt);
-    error = -1*(ref_tilt - current_tilt[1]); 
+    Claptrap::read_MPU();
+    error = -1*(ref_tilt - angles_filtered[1]); 
 
     /* PID gains */
     P_tilt_gain = Kp_tilt*error;

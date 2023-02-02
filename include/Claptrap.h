@@ -61,7 +61,7 @@ class Claptrap {
         void read_encoder(uint8_t encoder_B_pin, uint8_t index);
         void write_serial(char ident);
         void read_serial(void);
-        void read_MPU(double* angles);
+        void read_MPU(void);
         void set_ref_vel(double* vel);
         void set_ref_tilt(double tilt);
         void set_motor_stop_flag(bool state);
@@ -91,7 +91,7 @@ class Claptrap {
         void read_acc(void);
         void read_gyro(void); 
         void integrate_gyro(void);
-        void kalman_filter(double* angles);
+        void kalman_filter(void);
 
         /* Radio variables */
         RF24 *radio;
@@ -110,7 +110,7 @@ class Claptrap {
         double vel_filtered_2[2];
 
         /* Motor (PID) variables */
-        double Kp_vel = 0.7, Ki_vel = 4, Kd_vel = 0;
+        double Kp_vel = 1, Ki_vel = 1, Kd_vel = 0;
         double Kp_tilt = 3, Ki_tilt = 5, Kd_tilt = 0.5;
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
