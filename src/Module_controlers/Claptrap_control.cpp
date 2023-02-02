@@ -50,7 +50,7 @@ void Claptrap::write_serial(char identByte){
                 Serial.print(";");
                 Serial.print(vel_filtered_1[0],3);
                 Serial.print(";");
-                Serial.print(vel_filtered_1[1],3);
+                Serial.print(vel_filtered_2[0],3);
                 Serial.print(";");
                 Serial.print(pwm[0]);
                 Serial.print(";");
@@ -89,6 +89,10 @@ void Claptrap::read_serial(){
 
             case 't':
                 sscanf(readBuffer,"%c;%lf;%lf;%lf;",&identByte,&Kp_tilt,&Ki_tilt,&Kd_tilt);
+            break;
+
+            case 'p':
+                sscanf(readBuffer,"%c;%d;%d;",&identByte,&manual_pwm[0],&manual_pwm[1]);
             break;
         }       
     }

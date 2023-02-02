@@ -44,6 +44,10 @@ void loop() {
         claptrap.set_motor_stop_flag(true); 
     }
 
+    /* Dry friction test */
+    claptrap.set_motor_pwm(claptrap.manual_pwm[0],M1_front_PIN,M1_back_PIN);
+    claptrap.set_motor_pwm(claptrap.manual_pwm[1],M2_front_PIN,M2_back_PIN);
+
     claptrap.set_ref_tilt(80);
     claptrap.calculate_tilt_PID();
 

@@ -65,6 +65,7 @@ class Claptrap {
         void set_ref_vel(double* vel);
         void set_ref_tilt(double tilt);
         void set_motor_stop_flag(bool state);
+        void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void inicialize_MPU_values(void);
         void inicialize_PID_values(void);
         void calibrate_gyro(void); 
@@ -75,6 +76,7 @@ class Claptrap {
 
         /* Variables */
         radio_data_struct radio_data;
+        int manual_pwm[2];
 
     private:
         /* Methods */
@@ -84,7 +86,6 @@ class Claptrap {
         void encoders_begin(void);
         void motors_begin(void); 
         void MPU_begin(void);    
-        void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void filter_velocity(double* velocity);
         void get_velocity(double* velocity);
         void read_acc(void);
@@ -125,4 +126,5 @@ class Claptrap {
         double angles_filtered[2]; 
         unsigned long last_gyro_read_time = 0;
         unsigned long last_MPU_filter_time = 0;
+
 };
