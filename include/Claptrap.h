@@ -114,6 +114,7 @@ class Claptrap {
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
         double ref_vel[2], ref_tilt;
+        int16_t pwm[2];
         unsigned long PID_vel_last_calc_time;
         unsigned long PID_tilt_last_calc_time;
         bool motor_stop_flag;

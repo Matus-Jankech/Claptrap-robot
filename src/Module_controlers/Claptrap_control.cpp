@@ -50,7 +50,11 @@ void Claptrap::write_serial(char identByte){
                 Serial.print(";");
                 Serial.print(vel_filtered_1[0],3);
                 Serial.print(";");
-                Serial.println(millis()/1000.0,3);
+                Serial.print(vel_filtered_1[1],3);
+                Serial.print(";");
+                Serial.print(pwm[0]);
+                Serial.print(";");
+                Serial.println(pwm[1]);
             break;
         }
     }

@@ -57,7 +57,6 @@ void Claptrap::calculate_velocity_PID(){
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
     double current_vel[2], error[2];
-    int16_t pwm[2];
     
     Claptrap::get_velocity(current_vel);
     for(int i = 0; i < NUM_OF_MOTORS; i++){
