@@ -33,24 +33,29 @@ void loop() {
             }
             if(claptrap.radio_data.j1PotX == 0){
                 if(LED_switch){
-                    claptrap.inicialize_PID_values();
-                    claptrap.set_motor_stop_flag(false); 
-                    claptrap.set_eye_color(0,255,0);
-                    LED_switch = false;
+                    if(claptrap.is_standing()){
+                        claptrap.inicialize_PID_values();
+                        claptrap.set_motor_stop_flag(false); 
+                        claptrap.set_eye_color(0,255,0);
+                        LED_switch = false;
+                    }
                 }
             }
             else if(claptrap.radio_data.j1PotX == 1){
                 if(!LED_switch){
-                    claptrap.inicialize_PID_values();
-                    claptrap.set_motor_stop_flag(false); 
-                    claptrap.set_eye_color(255,0,0);
-                    LED_switch = true;
+                    if(claptrap.is_standing()){
+                        claptrap.inicialize_PID_values();
+                        claptrap.set_motor_stop_flag(false); 
+                        claptrap.set_eye_color(255,0,0);
+                        LED_switch = true;
+                    }   
                 }
             }
         }
         else{
             LED_switch = false;
             claptrap.set_motor_stop_flag(true); 
+            claptrap.set_eye_color(0,0,255);
         }
 
         claptrap.set_ref_tilt(0);
@@ -60,7 +65,7 @@ void loop() {
         claptrap.read_serial();
         if(millis() - Last_serial_timer > 200){
             Last_serial_timer = millis();
-            claptrap.write_serial('D');
+            //claptrap.write_serial('D');
         }
 
         last_loop_time = current_loop_time;

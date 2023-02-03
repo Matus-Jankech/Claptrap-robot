@@ -93,10 +93,15 @@ void Claptrap::read_serial(){
             case 't':
                 sscanf(readBuffer,"%c;%lf;%lf;%lf;",&identByte,&Kp_tilt,&Ki_tilt,&Kd_tilt);
             break;
-
-            case 'p':
-                sscanf(readBuffer,"%c;%d;%d;",&identByte,&manual_pwm[0],&manual_pwm[1]);
-            break;
         }       
+    }
+}
+
+bool Claptrap::is_standing(void){
+    if(angles_filtered[1] < 0.75 && angles_filtered[1] > -0.75){
+        return true;
+    }
+    else{
+        return false;
     }
 }

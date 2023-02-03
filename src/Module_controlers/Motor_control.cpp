@@ -127,6 +127,12 @@ void Claptrap::calculate_tilt_PID(){
     }
     D_tilt_gain = Kd_tilt*(error - last_error)*delta_time;
 
+    Serial.print(P_tilt_gain,4);
+    Serial.print(" , ");
+    Serial.print(I_tilt_gain,4);
+    Serial.print(" , ");
+    Serial.println(D_tilt_gain,4);
+
     /* Input for velocity controller */
     ref_vel[0] = P_tilt_gain + I_tilt_gain + D_tilt_gain;
     if(ref_vel[0] > 0){
