@@ -100,7 +100,7 @@ void Claptrap::integrate_gyro(void){
 void Claptrap::kalman_filter(){
     unsigned long current_time = micros();
     double delta_time = (double)(current_time-last_MPU_filter_time)/1e6;
-    float kalman_gain[2];
+    float kalman_gain[2], pitch_offset = 0.7;
 
     for(int i = 0; i < 2; i++){
         kalman_angles[i] = kalman_angles[i] + gyro_rates[i]*delta_time;
@@ -111,6 +111,7 @@ void Claptrap::kalman_filter(){
         angles_filtered[i] = kalman_angles[i];
     }
 
+    angles_filtered[1] = angles_filtered[1] - pitch_offset;
     last_MPU_filter_time = current_time;
 }
 

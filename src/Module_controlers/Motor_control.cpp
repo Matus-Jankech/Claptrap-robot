@@ -25,7 +25,7 @@ void Claptrap::inicialize_PID_values(){
 }
 
 void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
-    const int DRY_FRICTION_CONST = 30;
+    const int DRY_FRICTION_CONST = 0;
 
     if(!motor_stop_flag){
         if(pwm_value > DRY_FRICTION_CONST){
@@ -52,7 +52,7 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 //======================================
 void Claptrap::calculate_velocity_PID(){
     const int NUM_OF_MOTORS = 2;
-    const int DRY_FRICTION_CONST[2] = {45,45};
+    const int DRY_FRICTION_CONST[2] = {20,20};
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
@@ -103,7 +103,8 @@ void Claptrap::calculate_velocity_PID(){
 //              Tilt PID
 //======================================
 void Claptrap::calculate_tilt_PID(){
-    const int MAX_OUTPUT_VEL = 100;
+    const int MAX_OUTPUT_VEL = 200;
+    const int DRY_FRICTION_CONST[2] = {0,0};
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_tilt_last_calc_time)/1e6;
     double error, ref_vel[2];
@@ -128,6 +129,12 @@ void Claptrap::calculate_tilt_PID(){
 
     /* Input for velocity controller */
     ref_vel[0] = P_tilt_gain + I_tilt_gain + D_tilt_gain;
+    if(ref_vel[0] > 0){
+        ref_vel[0] = ref_vel[0] + DRY_FRICTION_CONST[0];
+    }
+    else if(ref_vel[0] < 0){
+        ref_vel[0] = ref_vel[0] - DRY_FRICTION_CONST[0];
+    }
 
     /* Saturation of ref_vel*/
     if(ref_vel[0] > MAX_OUTPUT_VEL){

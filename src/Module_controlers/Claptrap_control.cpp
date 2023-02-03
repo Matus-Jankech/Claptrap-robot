@@ -16,7 +16,7 @@ void Claptrap::begin(){
 }
 
 //======================================
-//            Write to robot
+//            Write to PC
 //======================================
 void Claptrap::write_serial(char identByte){
     if(Serial.availableForWrite() > 0){
@@ -61,7 +61,7 @@ void Claptrap::write_serial(char identByte){
 }
 
 //======================================
-//           Read from robot
+//           Read from PC
 //======================================
 void Claptrap::read_serial(){
     if(Serial.available() > 0){
