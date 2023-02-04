@@ -65,7 +65,7 @@ void loop() {
         claptrap.read_serial();
         if(millis() - Last_serial_timer > 200){
             Last_serial_timer = millis();
-            //claptrap.write_serial('D');
+            claptrap.write_serial('D');
         }
 
         last_loop_time = current_loop_time;

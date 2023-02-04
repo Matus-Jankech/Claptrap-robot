@@ -51,8 +51,8 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 //               Velocity PID
 //======================================
 void Claptrap::calculate_velocity_PID(){
+    const float MOTOR_SCALE_FACTOR[2] = {1.38,1.0};
     const int NUM_OF_MOTORS = 2;
-    const int DRY_FRICTION_CONST[2] = {20,20};
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
@@ -63,10 +63,10 @@ void Claptrap::calculate_velocity_PID(){
         error[i] = ref_vel[i] - current_vel[i]; 
 
         /* PI gains */
-        P_vel_gain[i] = Kp_vel*error[i];
+        P_vel_gain[i] = Kp_vel*MOTOR_SCALE_FACTOR[i]*error[i];
         if((P_vel_gain[i] + I_vel_gain[i]) < MAX_OUTPUT_PWM && (P_vel_gain[i] + I_vel_gain[i]) > -MAX_OUTPUT_PWM) // Anti-windup
         { 
-            I_vel_gain[i] = I_vel_gain[i] + Ki_vel*error[i]*delta_time;
+            I_vel_gain[i] = I_vel_gain[i] + Ki_vel*MOTOR_SCALE_FACTOR[i]*error[i]*delta_time;
             if(I_vel_gain[i] > MAX_OUTPUT_PWM){
                 I_vel_gain[i] = MAX_OUTPUT_PWM;
             }
@@ -77,12 +77,6 @@ void Claptrap::calculate_velocity_PID(){
 
         /* Input for motors */
         pwm[i] = P_vel_gain[i] + I_vel_gain[i];
-        if(ref_vel[i] > 0){
-            pwm[i] = pwm[i] + DRY_FRICTION_CONST[i];
-        }
-        else if(ref_vel[i] < 0){
-            pwm[i] = pwm[i] - DRY_FRICTION_CONST[i];
-        }
 
         /* Saturation of inputs for motors*/
         if(pwm[i] > MAX_OUTPUT_PWM){
@@ -104,7 +98,6 @@ void Claptrap::calculate_velocity_PID(){
 //======================================
 void Claptrap::calculate_tilt_PID(){
     const int MAX_OUTPUT_VEL = 200;
-    const int DRY_FRICTION_CONST[2] = {0,0};
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_tilt_last_calc_time)/1e6;
     double error, ref_vel[2];
@@ -127,20 +120,8 @@ void Claptrap::calculate_tilt_PID(){
     }
     D_tilt_gain = Kd_tilt*(error - last_error)*delta_time;
 
-    Serial.print(P_tilt_gain,4);
-    Serial.print(" , ");
-    Serial.print(I_tilt_gain,4);
-    Serial.print(" , ");
-    Serial.println(D_tilt_gain,4);
-
     /* Input for velocity controller */
     ref_vel[0] = P_tilt_gain + I_tilt_gain + D_tilt_gain;
-    if(ref_vel[0] > 0){
-        ref_vel[0] = ref_vel[0] + DRY_FRICTION_CONST[0];
-    }
-    else if(ref_vel[0] < 0){
-        ref_vel[0] = ref_vel[0] - DRY_FRICTION_CONST[0];
-    }
 
     /* Saturation of ref_vel*/
     if(ref_vel[0] > MAX_OUTPUT_VEL){
