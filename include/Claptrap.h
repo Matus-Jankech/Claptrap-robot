@@ -37,6 +37,14 @@ void read_encoder_2();
 //        Radio data structure
 //======================================
 typedef struct RADIO_DATA_STRUCT {
+    byte switch1;
+    byte switch2;
+    byte switch3;
+    byte switch4;
+    byte button1;
+    byte button2;
+    byte button3;
+    byte button4; 
     byte j1PotX;
     byte j1PotY;
     byte j2PotX;

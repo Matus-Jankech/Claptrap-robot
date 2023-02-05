@@ -16,6 +16,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
     attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
     //claptrap.calibrate_gyro();
+    delay(1000);
 }
 
 //======================================
@@ -31,7 +32,7 @@ void loop() {
                 last_radio_reading = millis();
                 claptrap.read_radio();
             }
-            if(claptrap.radio_data.j1PotX == 0){
+            if(claptrap.radio_data.switch1 == 0){
                 if(LED_switch){
                     if(claptrap.is_standing()){
                         claptrap.inicialize_PID_values();
@@ -41,7 +42,7 @@ void loop() {
                     }
                 }
             }
-            else if(claptrap.radio_data.j1PotX == 1){
+            else if(claptrap.radio_data.switch1 == 1){
                 if(!LED_switch){
                     if(claptrap.is_standing()){
                         claptrap.inicialize_PID_values();
