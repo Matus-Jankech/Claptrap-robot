@@ -34,7 +34,7 @@ void read_encoder_2();
 #define pipe 0xE8E8F0F0E1LL
 
 //======================================
-//        Radio data structure
+//        Radio data structures
 //======================================
 typedef struct RADIO_DATA_STRUCT {
     byte switch1;
@@ -50,6 +50,22 @@ typedef struct RADIO_DATA_STRUCT {
     byte j2PotX;
     byte j2PotY;
 } radio_data_struct;
+
+typedef struct LOCAL_RADIO_DATA_STRUCT{
+    float switch1;
+    float switch2;
+    float switch3;
+    float switch4;
+    float button1;
+    float button2;
+    float button3;
+    float button4; 
+    float j1PotX;
+    float j1PotY;
+    float j2PotX;
+    float j2PotY;
+} local_radio_data_struct;
+
 
 //======================================
 //            Claptrap class
@@ -85,7 +101,7 @@ class Claptrap {
         void calculate_velocity_PID(); 
 
         /* Variables */
-        radio_data_struct radio_data;
+        local_radio_data_struct radio_in;
         bool is_balancing = true;
 
     private:
@@ -102,12 +118,18 @@ class Claptrap {
         void read_gyro(void); 
         void integrate_gyro(void);
         void kalman_filter(void);
+        void input_filter(void);
 
         /* Radio variables */
         RF24* radio;
+        radio_data_struct radio_data;
         byte* radio_members = &radio_data.switch1;
+        float* local_radio_member = &radio_in.switch1;
+        float radio_current_input_values[12];
+        float radio_input_integrators[4];
         bool radio_status = false;
         unsigned long radio_last_receive_time;
+        unsigned long radio_last_integration_time;
 
         /* MP3 and LEDs variables */
         DFPlayerMini_Fast mp3;
@@ -139,5 +161,4 @@ class Claptrap {
         double angles_filtered[2]; 
         unsigned long last_gyro_read_time = 0;
         unsigned long last_MPU_filter_time = 0;
-
 };

@@ -27,7 +27,6 @@ void loop() {
 
     if(current_loop_time - last_loop_time > 2000){
 
-        claptrap.set_ref_tilt(0);
         claptrap.calculate_tilt_PID();   
 
         if(claptrap.is_radio_connected()){
@@ -36,7 +35,7 @@ void loop() {
                 claptrap.read_radio();
                 //claptrap.print_radio();
             }
-            if(claptrap.radio_data.switch4 == 0){
+            if(claptrap.radio_in.switch4 == true){
                 if(claptrap.is_balancing == false){
                     if(claptrap.is_standing()){
                         claptrap.inicialize_PID_values();
@@ -46,26 +45,28 @@ void loop() {
                     }
                 }
             }
-            else if(claptrap.radio_data.switch4 == 1){
+            else if(claptrap.radio_in.switch4 == false){
                 if(claptrap.is_balancing == true){
                         claptrap.set_motor_stop_flag(true); 
                         claptrap.set_eye_color(255,0,0);
                         claptrap.is_balancing = false; 
                 }
             }
+            claptrap.set_ref_tilt(claptrap.radio_in.j1PotY);
         }
         else{
             claptrap.is_balancing = true;
             claptrap.set_motor_stop_flag(true); 
             claptrap.set_eye_color(0,0,255);
+            claptrap.set_ref_tilt(0);
         }
 
         /* Serial COM test*/
-        /*claptrap.read_serial();
+        claptrap.read_serial();
         if(millis() - Last_serial_timer > 200){
             Last_serial_timer = millis();
             claptrap.write_serial('D');
-        }*/
+        }
 
         last_loop_time = current_loop_time;
     }
