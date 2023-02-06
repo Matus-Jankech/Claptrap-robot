@@ -3,7 +3,6 @@
 
 /* Global variables */
 Claptrap claptrap;
-bool LED_switch = true;
 double ref_vel[2];
 unsigned long Last_serial_timer, last_radio_reading;
 unsigned long current_loop_time, last_loop_time;
@@ -15,6 +14,7 @@ void setup() {
     claptrap.begin();
     attachInterrupt(digitalPinToInterrupt(Encoder_A1_PIN), read_encoder_1, RISING);
     attachInterrupt(digitalPinToInterrupt(Encoder_A2_PIN), read_encoder_2, RISING);
+    claptrap.set_motor_stop_flag(true); 
     //claptrap.calibrate_gyro();
     delay(1000);
 }
@@ -27,47 +27,45 @@ void loop() {
 
     if(current_loop_time - last_loop_time > 2000){
 
+        claptrap.set_ref_tilt(0);
+        claptrap.calculate_tilt_PID();   
+
         if(claptrap.is_radio_connected()){
             if(millis() - last_radio_reading > 20){
                 last_radio_reading = millis();
                 claptrap.read_radio();
+                //claptrap.print_radio();
             }
-            if(claptrap.radio_data.switch1 == 0){
-                if(LED_switch){
+            if(claptrap.radio_data.switch4 == 0){
+                if(claptrap.is_balancing == false){
                     if(claptrap.is_standing()){
                         claptrap.inicialize_PID_values();
                         claptrap.set_motor_stop_flag(false); 
                         claptrap.set_eye_color(0,255,0);
-                        LED_switch = false;
+                        claptrap.is_balancing = true;
                     }
                 }
             }
-            else if(claptrap.radio_data.switch1 == 1){
-                if(!LED_switch){
-                    if(claptrap.is_standing()){
-                        claptrap.inicialize_PID_values();
-                        claptrap.set_motor_stop_flag(false); 
+            else if(claptrap.radio_data.switch4 == 1){
+                if(claptrap.is_balancing == true){
+                        claptrap.set_motor_stop_flag(true); 
                         claptrap.set_eye_color(255,0,0);
-                        LED_switch = true;
-                    }   
+                        claptrap.is_balancing = false; 
                 }
             }
         }
         else{
-            LED_switch = false;
+            claptrap.is_balancing = true;
             claptrap.set_motor_stop_flag(true); 
             claptrap.set_eye_color(0,0,255);
         }
 
-        claptrap.set_ref_tilt(0);
-        claptrap.calculate_tilt_PID();
-
         /* Serial COM test*/
-        claptrap.read_serial();
+        /*claptrap.read_serial();
         if(millis() - Last_serial_timer > 200){
             Last_serial_timer = millis();
             claptrap.write_serial('D');
-        }
+        }*/
 
         last_loop_time = current_loop_time;
     }

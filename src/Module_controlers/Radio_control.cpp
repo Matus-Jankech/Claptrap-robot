@@ -27,3 +27,11 @@ bool Claptrap::is_radio_connected(){
 void Claptrap::read_radio(){
     radio->read(&radio_data, sizeof(radio_data_struct));
 }
+
+void Claptrap::print_radio(){
+    for(int i = 0; i < 8; i++){
+        Serial.print(radio_members[i]);
+        Serial.print(",");
+    }
+    Serial.println("");
+}

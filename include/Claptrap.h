@@ -78,6 +78,7 @@ class Claptrap {
         void inicialize_PID_values(void);
         void calibrate_gyro(void); 
         bool is_standing(void);
+        void print_radio(void);
 
         // Later move to private methods 
         void calculate_tilt_PID();
@@ -85,7 +86,7 @@ class Claptrap {
 
         /* Variables */
         radio_data_struct radio_data;
-        int manual_pwm[2];
+        bool is_balancing = true;
 
     private:
         /* Methods */
@@ -103,13 +104,16 @@ class Claptrap {
         void kalman_filter(void);
 
         /* Radio variables */
-        RF24 *radio;
+        RF24* radio;
+        byte* radio_members = &radio_data.switch1;
         bool radio_status = false;
         unsigned long radio_last_receive_time;
 
         /* MP3 and LEDs variables */
         DFPlayerMini_Fast mp3;
         Adafruit_NeoPixel pixels;
+        unsigned long switch_last_read_time[4];
+        int switch_last_state[4];
 
         /* Encoders variables */
         volatile long current_encoder_pos[2];
