@@ -43,7 +43,7 @@ void Claptrap::read_radio(){
 void Claptrap::input_filter(){
     unsigned long current_time = micros();
     double delta_time = (current_time - radio_last_integration_time)/1e6;
-    const float K = 5;
+    const float K[2] = {5,10};
 
     for(int i = 0; i < 8; i++){
         local_radio_member[i] = radio_current_input_values[i];
@@ -53,10 +53,10 @@ void Claptrap::input_filter(){
     radio_input_integrators[1] = radio_input_integrators[1] + K*(radio_current_input_values[10] - radio_input_integrators[1])*delta_time;*/
 
 
-    radio_input_integrators[0] = radio_input_integrators[0] - K*(2*radio_current_input_values[4] + radio_input_integrators[0])*delta_time;
-    radio_input_integrators[1] = radio_input_integrators[1] + K*(2*radio_current_input_values[5] - radio_input_integrators[1])*delta_time;
-    radio_input_integrators[2] = radio_input_integrators[2] - K*(2*radio_current_input_values[6] + radio_input_integrators[2])*delta_time;
-    radio_input_integrators[3] = radio_input_integrators[3] + K*(2*radio_current_input_values[7] - radio_input_integrators[3])*delta_time;
+    radio_input_integrators[0] = radio_input_integrators[0] - K[0]*(2*radio_current_input_values[4] + radio_input_integrators[0])*delta_time;
+    radio_input_integrators[1] = radio_input_integrators[1] + K[0]*(2*radio_current_input_values[5] - radio_input_integrators[1])*delta_time;
+    radio_input_integrators[2] = radio_input_integrators[2] - K[1]*(6*radio_current_input_values[6] + radio_input_integrators[2])*delta_time;
+    radio_input_integrators[3] = radio_input_integrators[3] + K[1]*(6*radio_current_input_values[7] - radio_input_integrators[3])*delta_time;
 
     local_radio_member[8] = 0;
     local_radio_member[9] = radio_input_integrators[0] + radio_input_integrators[1];

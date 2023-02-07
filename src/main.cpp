@@ -53,20 +53,22 @@ void loop() {
                 }
             }
             claptrap.set_ref_tilt(claptrap.radio_in.j1PotY);
+            claptrap.set_angular_vel(claptrap.radio_in.j2PotX);
         }
         else{
             claptrap.is_balancing = true;
             claptrap.set_motor_stop_flag(true); 
             claptrap.set_eye_color(0,0,255);
             claptrap.set_ref_tilt(0);
+            claptrap.set_angular_vel(0);
         }
 
         /* Serial COM test*/
-        claptrap.read_serial();
+        /*claptrap.read_serial();
         if(millis() - Last_serial_timer > 200){
             Last_serial_timer = millis();
             claptrap.write_serial('D');
-        }
+        }*/
 
         last_loop_time = current_loop_time;
     }

@@ -88,6 +88,7 @@ class Claptrap {
         void read_MPU(void);
         void set_ref_vel(double* vel);
         void set_ref_tilt(double tilt);
+        void set_angular_vel(double angular_vel);
         void set_motor_stop_flag(bool state);
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
         void inicialize_MPU_values(void);
@@ -149,7 +150,7 @@ class Claptrap {
         double Kp_tilt = 20, Ki_tilt = 240, Kd_tilt = 0;
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
-        double ref_vel[2], ref_tilt;
+        double ref_vel[2], ref_tilt, ref_angular_velocity;
         int16_t pwm[2];
         unsigned long PID_vel_last_calc_time;
         unsigned long PID_tilt_last_calc_time;

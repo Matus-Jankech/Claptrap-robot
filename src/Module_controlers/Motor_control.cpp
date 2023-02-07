@@ -56,11 +56,20 @@ void Claptrap::calculate_velocity_PID(){
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_vel_last_calc_time)/1e6;
-    double current_vel[2], error[2];
+    double current_vel[2], angular_vel[2], error[2];
     
     Claptrap::get_velocity(current_vel);
+    angular_vel[0] = ref_angular_velocity;
+    angular_vel[1] = -ref_angular_velocity;
+
+    Serial.print(ref_angular_velocity);
+    Serial.print(",");
+    Serial.print(angular_vel[0]);
+    Serial.print(",");
+    Serial.println(angular_vel[1]);
+
     for(int i = 0; i < NUM_OF_MOTORS; i++){
-        error[i] = ref_vel[i] - current_vel[i]; 
+        error[i] = ref_vel[i] + angular_vel[i] - current_vel[i]; 
 
         /* PI gains */
         P_vel_gain[i] = Kp_vel*MOTOR_SCALE_FACTOR[i]*error[i];
@@ -150,6 +159,10 @@ void Claptrap::set_ref_vel(double* vel){
 
 void Claptrap::set_ref_tilt(double tilt){
     ref_tilt = tilt;
+}
+
+void Claptrap::set_angular_vel(double angular_vel){
+    ref_angular_velocity = angular_vel;
 }
 
 void Claptrap::set_motor_stop_flag(bool state){
