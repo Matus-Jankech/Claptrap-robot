@@ -147,7 +147,7 @@ class Claptrap {
 
         /* Motor (PID) variables */
         double Kp_vel = 3, Ki_vel = 15, Kd_vel = 0;
-        double Kp_tilt = 20, Ki_tilt = 240, Kd_tilt = 0;
+        double Kp_tilt = 18, Ki_tilt = 222, Kd_tilt = 0;
         double P_vel_gain[2], I_vel_gain[2];
         double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
         double ref_vel[2], ref_tilt, ref_angular_velocity;

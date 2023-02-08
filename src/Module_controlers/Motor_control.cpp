@@ -51,7 +51,7 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 //               Velocity PID
 //======================================
 void Claptrap::calculate_velocity_PID(){
-    const float MOTOR_SCALE_FACTOR[2] = {1.2,1.0};
+    const float MOTOR_SCALE_FACTOR[2] = {1.25,1.0};
     const int NUM_OF_MOTORS = 2;
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
@@ -61,12 +61,6 @@ void Claptrap::calculate_velocity_PID(){
     Claptrap::get_velocity(current_vel);
     angular_vel[0] = ref_angular_velocity;
     angular_vel[1] = -ref_angular_velocity;
-
-    Serial.print(ref_angular_velocity);
-    Serial.print(",");
-    Serial.print(angular_vel[0]);
-    Serial.print(",");
-    Serial.println(angular_vel[1]);
 
     for(int i = 0; i < NUM_OF_MOTORS; i++){
         error[i] = ref_vel[i] + angular_vel[i] - current_vel[i]; 
