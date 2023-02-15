@@ -48,7 +48,7 @@ void Claptrap::set_motor_pwm(int pwm_value, int pin_1, int pin_2){
 }
 
 //======================================
-//               Velocity PID
+//           Wheel velocity PID
 //======================================
 void Claptrap::calculate_velocity_PID(){
     const float MOTOR_SCALE_FACTOR[2] = {1.25,1.0};
@@ -97,7 +97,7 @@ void Claptrap::calculate_velocity_PID(){
 }
 
 //======================================
-//              Tilt PID
+//              Pitch PID
 //======================================
 void Claptrap::calculate_tilt_PID(){
     const int MAX_OUTPUT_VEL = 200;
