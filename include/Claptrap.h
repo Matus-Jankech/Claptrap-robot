@@ -86,8 +86,8 @@ class Claptrap {
         void write_serial(char ident);
         void read_serial(void);
         void read_MPU(void);
-        void set_wheels_ref_vel(double* vel);
-        void set_ref_pitch(double tilt);
+        void set_wheels_ref_vel(double* wheels_vel);
+        void set_ref_pitch(double pitch);
         void set_angular_vel(double angular_vel);
         void set_motor_stop_flag(bool state);
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);

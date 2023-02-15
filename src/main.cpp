@@ -52,14 +52,14 @@ void loop() {
                         claptrap.is_balancing = false; 
                 }
             }
-            claptrap.set_ref_tilt(claptrap.radio_in.j1PotY);
+            claptrap.set_ref_pitch(claptrap.radio_in.j1PotY);
             claptrap.set_angular_vel(claptrap.radio_in.j2PotX);
         }
         else{
             claptrap.is_balancing = true;
             claptrap.set_motor_stop_flag(true); 
             claptrap.set_eye_color(0,0,255);
-            claptrap.set_ref_tilt(0);
+            claptrap.set_ref_pitch(0);
             claptrap.set_angular_vel(0);
         }
 

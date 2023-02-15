@@ -56,15 +56,15 @@ void Claptrap::calculate_wheels_velocity_PID(){
     const int MAX_OUTPUT_PWM = 255;
     unsigned long current_time = micros();
     double delta_time = (double)(current_time - PID_wheels_vel_last_calc_time)/1e6;
-    double current_vel[2], angular_vel[2], error[2];
+    double current_wheels_vel[2], angular_vel[2], error[2];
     int16_t output_pwm[2];
     
-    Claptrap::get_velocity(current_vel);
+    Claptrap::get_velocity(current_wheels_vel);
     angular_vel[0] = ref_angular_vel;
     angular_vel[1] = -ref_angular_vel;
 
     for(int i = 0; i < NUM_OF_MOTORS; i++){
-        error[i] = ref_wheels_vel[i] + angular_vel[i] - current_vel[i]; 
+        error[i] = ref_wheels_vel[i] + angular_vel[i] - current_wheels_vel[i]; 
 
         /* PI gains */
         P_wheels_vel_gain[i] = Kp_vel*MOTOR_SCALE_FACTOR[i]*error[i];
@@ -124,10 +124,10 @@ void Claptrap::calculate_pitch_PID(){
     }
     D_pitch_gain = Kd_pitch*(error - pitch_last_error)*delta_time;
 
-    /* Input for velocity controller */
+    /* Input for wheels velocity controller */
     output_wheels_vel[0] = P_pitch_gain + I_pitch_gain + D_pitch_gain;
 
-    /* Saturation of ref_vel*/
+    /* Saturation of output_wheels_vel*/
     if(output_wheels_vel[0] > MAX_OUTPUT_WHEELS_VEL){
         output_wheels_vel[0] = MAX_OUTPUT_WHEELS_VEL;
     } 
@@ -136,7 +136,7 @@ void Claptrap::calculate_pitch_PID(){
     }
     output_wheels_vel[1] = output_wheels_vel[0];
     
-    /* Write values into velocity controller */
+    /* Write values into wheels velocity controller */
     Claptrap::set_wheels_ref_vel(output_wheels_vel);
     Claptrap::calculate_wheels_velocity_PID();
     pitch_last_error = error;
@@ -147,22 +147,59 @@ void Claptrap::calculate_pitch_PID(){
 //           Robot velocity PID
 //======================================
 void Claptrap::calculate_robot_velocity_PID(){
-    /*const float MAX_OUTPUT_ROBOT_VEL = 0.5;
+    const float MAX_OUTPUT_PITCH = 3;
+    const float ROT_LIN_RATIO = 0.5; // revision needed !!!
     unsigned long current_time = micros();
-    double delta_time = (double)(current_time - PID_pitch_last_calc_time)/1e6;
-    double error, ref_vel[2];*/
+    double delta_time = (double)(current_time - PID_robot_vel_last_calc_time)/1e6;
+    double error, output_pitch, current_lin_vel, current_wheels_vel[2];
+
+    /* Get lin vel and error */
+    get_velocity(current_wheels_vel);
+    current_lin_vel = (current_wheels_vel[0] - ref_angular_vel)*ROT_LIN_RATIO; // revision needed !!!
+    error = ref_linear_vel - current_lin_vel; 
+
+    /* PID gains */
+    P_robot_vel_gain = Kp_robot_vel*error;
+    if((P_robot_vel_gain + I_robot_vel_gain) < MAX_OUTPUT_PITCH && (P_robot_vel_gain + I_robot_vel_gain) > -MAX_OUTPUT_PITCH)  // Anti-windup
+    {
+        I_robot_vel_gain = I_robot_vel_gain + Ki_robot_vel*error*delta_time;
+        if(I_robot_vel_gain > MAX_OUTPUT_PITCH){
+            I_robot_vel_gain = MAX_OUTPUT_PITCH;
+        }
+        else if(I_robot_vel_gain < -MAX_OUTPUT_PITCH){
+            I_robot_vel_gain = -MAX_OUTPUT_PITCH;                   
+        }
+    }
+    D_robot_vel_gain = Kd_robot_vel*(error - robot_vel_last_error)*delta_time;
+
+    /* Input for pitch controller */
+    output_pitch = P_robot_vel_gain + I_robot_vel_gain + D_robot_vel_gain;
+
+    /* Saturation of output_pitch*/
+    if(output_pitch > MAX_OUTPUT_PITCH){
+        output_pitch = MAX_OUTPUT_PITCH;
+    } 
+    else if(output_pitch < -MAX_OUTPUT_PITCH){
+        output_pitch = -MAX_OUTPUT_PITCH;   
+    }
+
+    /* Write values into pitch controller */
+    Claptrap::set_ref_pitch(output_pitch);
+    Claptrap::calculate_pitch_PID();
+    robot_vel_last_error = error;
+    PID_robot_vel_last_calc_time = current_time;
 }
 
 //======================================
 //               Setters
 //======================================
-void Claptrap::set_wheels_ref_vel(double* vel){
-    ref_wheels_vel[0] = vel[0];
-    ref_wheels_vel[1] = vel[1];
+void Claptrap::set_wheels_ref_vel(double* wheels_vel){
+    ref_wheels_vel[0] = wheels_vel[0];
+    ref_wheels_vel[1] = wheels_vel[1];
 }
 
-void Claptrap::set_ref_pitch(double tilt){
-    ref_pitch = tilt;
+void Claptrap::set_ref_pitch(double pitch){
+    ref_pitch = pitch;
 }
 
 void Claptrap::set_angular_vel(double angular_vel){
