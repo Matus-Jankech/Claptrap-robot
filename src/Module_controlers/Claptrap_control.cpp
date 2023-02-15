@@ -32,26 +32,26 @@ void Claptrap::write_serial(char identByte){
 
             case 'T':
                 Serial.print("t;");
-                Serial.print(Kp_tilt,3);
+                Serial.print(Kp_pitch,3);
                 Serial.print(";");
-                Serial.print(Ki_tilt,3);
+                Serial.print(Ki_pitch,3);
                 Serial.print(";");
-                Serial.println(Kd_tilt,3);
+                Serial.println(Kd_pitch,3);
             break;
 
             case 'D':
                 Serial.print("d;");
-                Serial.print(ref_vel[0],3);
+                Serial.print(ref_wheels_vel[0],3);
                 Serial.print(";");
                 Serial.print(vel_filtered_1[0],3);
                 Serial.print(";");
                 Serial.print(vel_filtered_2[0],3);
                 Serial.print(";");
-                Serial.print(pwm[0]);
+                /*Serial.print(pwm[0]);
                 Serial.print(";");
-                Serial.print(pwm[1]);
+                Serial.print(pwm[1]);*/
                 Serial.print(";");
-                Serial.print(ref_tilt);
+                Serial.print(ref_pitch);
                 Serial.print(";");
                 Serial.println(angles_filtered[1]);
             break;
@@ -91,7 +91,7 @@ void Claptrap::read_serial(){
             break;
 
             case 't':
-                sscanf(readBuffer,"%c;%lf;%lf;%lf;",&identByte,&Kp_tilt,&Ki_tilt,&Kd_tilt);
+                sscanf(readBuffer,"%c;%lf;%lf;%lf;",&identByte,&Kp_pitch,&Ki_pitch,&Kd_pitch);
             break;
         }       
     }

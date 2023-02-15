@@ -86,8 +86,8 @@ class Claptrap {
         void write_serial(char ident);
         void read_serial(void);
         void read_MPU(void);
-        void set_ref_vel(double* vel);
-        void set_ref_tilt(double tilt);
+        void set_wheels_ref_vel(double* vel);
+        void set_ref_pitch(double tilt);
         void set_angular_vel(double angular_vel);
         void set_motor_stop_flag(bool state);
         void set_motor_pwm(int pwm_value, int pin_1, int pin_2);
@@ -98,8 +98,9 @@ class Claptrap {
         void print_radio(void);
 
         // Later move to private methods 
-        void calculate_tilt_PID();
-        void calculate_velocity_PID(); 
+        void calculate_pitch_PID();
+        void calculate_wheels_velocity_PID(); 
+        void calculate_robot_velocity_PID(); 
 
         /* Variables */
         local_radio_data_struct radio_in;
@@ -147,13 +148,17 @@ class Claptrap {
 
         /* Motor (PID) variables */
         double Kp_vel = 3, Ki_vel = 15, Kd_vel = 0;
-        double Kp_tilt = 18, Ki_tilt = 222, Kd_tilt = 0;
-        double P_vel_gain[2], I_vel_gain[2];
-        double P_tilt_gain, I_tilt_gain, D_tilt_gain, last_error;
-        double ref_vel[2], ref_tilt, ref_angular_velocity;
-        int16_t pwm[2];
-        unsigned long PID_vel_last_calc_time;
-        unsigned long PID_tilt_last_calc_time;
+        double Kp_pitch = 18, Ki_pitch = 222, Kd_pitch = 0;
+        double Kp_robot_vel = 0, Ki_robot_vel = 0, Kd_robot_vel = 0;
+
+        double P_wheels_vel_gain[2], I_wheels_vel_gain[2];
+        double P_pitch_gain, I_pitch_gain, D_pitch_gain, pitch_last_error;
+        double P_robot_vel_gain, I_robot_vel_gain, D_robot_vel_gain,robot_vel_last_error;
+        double ref_wheels_vel[2], ref_pitch, ref_linear_vel, ref_angular_vel;
+
+        unsigned long PID_wheels_vel_last_calc_time;
+        unsigned long PID_pitch_last_calc_time;
+        unsigned long PID_robot_vel_last_calc_time;
         bool motor_stop_flag;
 
         /* Acc + Gyro variables */

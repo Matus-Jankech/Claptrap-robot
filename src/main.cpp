@@ -27,7 +27,7 @@ void loop() {
 
     if(current_loop_time - last_loop_time > 2000){
 
-        claptrap.calculate_tilt_PID();   
+        claptrap.calculate_pitch_PID();   
 
         if(claptrap.is_radio_connected()){
             if(millis() - last_radio_reading > 20){
